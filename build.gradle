@@ -6,10 +6,25 @@ plugins {
 
 group = 'com.webtech'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '14'
 
 repositories {
 	mavenCentral()
+}
+
+processResources {
+	dependsOn 'copyDistToStatic'
+}
+
+task copyDistToStatic(type: Copy) {
+	dependsOn 'npmRunBuild'
+	from "$projectDir/src/frontend/dist"
+	into "$buildDir/resources/main/static"
+}
+
+task npmRunBuild(type: Exec) {
+	workingDir './src/frontend'
+	commandLine 'npm', 'run', 'build'
 }
 
 dependencies {
