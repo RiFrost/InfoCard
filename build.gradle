@@ -24,7 +24,6 @@ task copyDistToStatic(type: Copy) {
 
 task npmRunBuild(type: Exec) {
 	workingDir './src/frontend'
-	commandLine 'npm', 'install'
 	commandLine 'npm', 'run', 'build'
 }
 
