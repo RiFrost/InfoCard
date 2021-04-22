@@ -17,7 +17,7 @@ jobs:
           node-version: "14"
           check-latest: true
       - name: Run npm install
-        run: npm ./src/frontend/ install
+        run: npm --prefix ./src/frontend/ install
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
       - name: clean build
