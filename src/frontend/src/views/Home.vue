@@ -1,18 +1,41 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+	<div class="home">
+		<h1>{{ msg }}</h1>
+	</div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import { ref, onMounted } from "vue";
 
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
-}
+	name: "Home",
+
+	setup() {
+		const msg = ref("");
+
+		onMounted(() => {
+			fetch("http://localhost:7000/api")
+				.then((res) => {
+					return res.text();
+				})
+				.then((data) => (msg.value = data));
+		});
+
+		return {
+			msg,
+		};
+	},
+};
 </script>
+
+<style scoped>
+.home {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+h1 {
+	font-weight: bolder;
+}
+</style>
