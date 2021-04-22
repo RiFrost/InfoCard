@@ -16,6 +16,8 @@ jobs:
         with:
           node-version: "14"
           check-latest: true
+      - name: Run npm install
+        run: npm install
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
       - name: clean build
