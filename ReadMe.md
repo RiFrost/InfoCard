@@ -26,12 +26,14 @@
     <img alt="Contributors" src="https://img.shields.io/badge/all_contributors-2-orange.svg?style=plastic">
   </a>
 </p>
-<hr>
-<br>
 
-### Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
-<br>
+<p>Hast du Schwierigkeiten dir Fakten dauerhaft zu merken? Dann bietet dir <strong><em>InfoCard</em></strong> die ultimative L&ouml;sung f&uuml;r dein Ged&auml;chtnisproblem!</p>
+<p>Egal ob in der Schule, im Studium oder im neuem Job. Oft f&auml;llt es uns schwer die wichtigen Fakten im Ged&auml;chtnis zu behalten.</p>
+<p>Logg dich ein und los geht's! Erstelle Themengebiete zu denen du dir etwas merken m&ouml;chtest. Lege dir Karteikarten an und f&uuml;lle sie mit dem altbekannten Frage-Antwortspiel aus.</p>
+<p>Du m&ouml;chtest dein Ged&auml;chtnis pr&uuml;fen? Kein Problem, w&auml;hle die gew&uuml;nschten Karteikarten aus und teste, wie gut du bist. Im Ampelsystem bestimmst du, wie gut du warst und bei welchen Fragen noch Lernbedarf besteht.</p>
+<p>Mit <strong><em>InfoCard</em></strong> gibt es keine peinlichen Momente des Vergessens mehr!</p>
+
 
 # Authors
 
