@@ -1,7 +1,7 @@
 # InfoCard
 
 <p align="center">
-  <img src="./frontend/src/assets/logo.png" alt="drawing" width="600" />
+  <img src="./src/frontend/src/assets/logo.png" alt="drawing" width="600" />
 
   <br>
   <a href="https://github.com/RiFrost/InfoCard/releases" target="_blank">
