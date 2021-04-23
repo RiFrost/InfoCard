@@ -7,6 +7,11 @@
 <script>
 import { ref, onMounted } from "vue";
 
+const API =
+	process.env.API_URL != undefined
+		? process.env.API_URL
+		: "http://localhost:7000";
+
 export default {
 	name: "Home",
 
@@ -14,7 +19,7 @@ export default {
 		const msg = ref("");
 
 		onMounted(() => {
-			fetch("http://localhost:7000/api")
+			fetch(API + "/api")
 				.then((res) => {
 					return res.text();
 				})
