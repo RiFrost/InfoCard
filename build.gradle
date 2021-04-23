@@ -23,12 +23,12 @@ task copyDistToStatic(type: Copy) {
 }
 
 task npmRunBuild(type: Exec) {
-	dependsOn 'npmINstall'
+	dependsOn 'npmInstall'
 	workingDir './src/frontend'
 	commandLine 'npm', 'run', 'build'
 }
 
-task npmINstall(type: Exec) {
+task npmInstall(type: Exec) {
 	workingDir './src/frontend'
 	commandLine 'npm', 'install'
 }
