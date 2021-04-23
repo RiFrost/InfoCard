@@ -8,8 +8,8 @@
 import { ref, onMounted } from "vue";
 
 const API =
-	process.env.API_URL != undefined
-		? process.env.API_URL
+	process.env.NODE_ENV === "production"
+		? "https://infocard.herokuapp.com"
 		: "http://localhost:7000";
 
 export default {
