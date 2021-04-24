@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
 	id 'org.springframework.boot' version '2.4.5'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -25,6 +27,26 @@ task copyDistToStatic(type: Copy) {
 task npmRunBuild(type: Exec) {
 	dependsOn 'npmInstall'
 	workingDir './src/frontend'
+	String npm = 'npm';
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		npm = 'npm.cmd'
+	}
+	commandLine npm, 'run', 'build'
+}
+
+task npmInstall(type: Exec) {
+	workingDir './src/frontend'
+	String npm = 'npm';
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		npm = 'npm.cmd'
+	}
+	commandLine npm, 'install'
+}
+
+/*
+task npmRunBuild(type: Exec) {
+	dependsOn 'npmInstall'
+	workingDir './src/frontend'
 	commandLine 'npm', 'run', 'build'
 }
 
@@ -32,6 +54,7 @@ task npmInstall(type: Exec) {
 	workingDir './src/frontend'
 	commandLine 'npm', 'install'
 }
+*/
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
