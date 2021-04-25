@@ -61,6 +61,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'com.oracle.database.jdbc:ojdbc8:19.6.0.0'
+	implementation 'com.oracle.database.jdbc:ucp:19.6.0.0'
 }
 
 test {
