@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 
 public class DbConnection {
-    private static final Logger L = LoggerFactory.getLogger(JdbcTest.class);
+    private static final Logger L = LoggerFactory.getLogger(DbConnection.class);
 
     private static DbConnection dbInstance; // vor Zugriff von außen geschützt und statisch
 	private DbConnection() {} // privater Konstruktor mit Zugriffsschutz von außen
