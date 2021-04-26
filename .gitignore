@@ -42,5 +42,4 @@ out/
 src/main/java/databaseConnection/JdbcTest.java
 src/main/java/databaseConnection/Raum.java
 src/main/java/databaseConnection/RaumException.java
-src/frontend/src/views/Login.vue
-src/frontend/src/components/Title.vue
+src/main/java/databaseConnection/DbCred.java
