@@ -4,6 +4,8 @@
 
 <script>
 export default {
+	name: "Login",
+
 	setup() {},
 };
 </script>
