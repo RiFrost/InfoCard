@@ -8,8 +8,21 @@ import java.sql.*;
 public class DbConnection {
     private static final Logger L = LoggerFactory.getLogger(DbConnection.class);
 
+    private String DB_URL;
+
+    private String DB_USER;
+
+    private String DB_PASSWORD;
+
     private static DbConnection dbInstance; // vor Zugriff von außen geschützt und statisch
-	private DbConnection() {} // privater Konstruktor mit Zugriffsschutz von außen
+	private DbConnection() {
+        System.out.println(System.getenv("DB_URL"));
+        System.out.println(System.getenv("DB_USER"));
+        System.out.println(System.getenv("DB_PASSWORD"));
+        DB_URL = System.getenv("DB_URL") != null ? System.getenv("DB_URL") : DbCred.url;
+        DB_USER = System.getenv("DB_USER") != null ? System.getenv("DB_USER") : DbCred.user;
+        DB_PASSWORD = System.getenv("DB_PASSWORD") != null ? System.getenv("DB_PASSWORD") : DbCred.password;
+    } // privater Konstruktor mit Zugriffsschutz von außen
 	public static DbConnection getInstance() { // öffentliche Methode, Aufruf durch Code
 		if (dbInstance == null) { // nur wenn keine Instanz besteht, dann erstelle eine neue
 			dbInstance = new DbConnection();
@@ -20,7 +33,7 @@ public class DbConnection {
     public boolean checkDbConnection() {
         L.info("Start");
 
-        try (Connection c = DriverManager.getConnection(DbCred.url, DbCred.user, DbCred.password)) {
+        try (Connection c = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             L.info("Verbindungsaufbau erfolgreich");
             return true;
             // Aufruf der eigentlichen Anwendungsfunktion
