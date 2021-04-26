@@ -1,13 +1,24 @@
 <template>
-	<router-view />
+ <div>
+	<my-header></my-header>
+   </div>
+  
+  
 </template>
 
+<script>
+import Header from './components/Header' 
+
+export default {
+    components:{         
+		'my-header':Header 
+		}  
+	}
+</script>
+
+
 <style>
-#app {
-	font-family: Avenir, Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
-	color: #2c3e50;
+body {
+background-color: #e3ecf8;
 }
 </style>
