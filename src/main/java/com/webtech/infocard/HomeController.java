@@ -16,8 +16,9 @@ public class HomeController {
   }
 
   @GetMapping("/db")
-  public boolean db() {
-    return DbConnection.getInstance().checkDbConnection();
+  public String db() {
+    boolean checkDbConnection = DbConnection.getInstance().checkDbConnection();
+    return checkDbConnection ? "DB Verbindung erfolgreich" : "DB Verbindung fehlgeschlagen";
   }
 
 
