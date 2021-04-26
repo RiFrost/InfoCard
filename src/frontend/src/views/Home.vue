@@ -20,7 +20,7 @@ export default {
 		console.log(process.env);
 
 		onMounted(() => {
-			fetch(API + "/api")
+			fetch(API + "/api/test")
 				.then((res) => {
 					return res.text();
 				})

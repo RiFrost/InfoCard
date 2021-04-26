@@ -10,7 +10,7 @@ import databaseConnection.DbConnection;
 @RestController
 @CrossOrigin
 @RequestMapping("/api")
-public class HomeController {
+public class ApiController {
   
   @GetMapping("/test")
   public String home() {
