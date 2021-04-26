@@ -15,7 +15,7 @@
 export default {};
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .header img {
 	position: absolute;
 	top: -20px;
