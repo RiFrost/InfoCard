@@ -6,7 +6,7 @@
 			<p>The New Way Of Learning</p>
 		</div>
 		<div class="b">
-			<a href="/login" class="myButton">Login</a>
+			<router-link to="/login" class="myButton">Login</router-link>
 		</div>
 	</div>
 </template>
