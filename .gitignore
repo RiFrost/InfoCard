@@ -43,3 +43,6 @@ src/main/java/databaseConnection/JdbcTest.java
 src/main/java/databaseConnection/Raum.java
 src/main/java/databaseConnection/RaumException.java
 src/main/java/databaseConnection/DbCred.java
+src/main/java/com/webtech/databaseConnection/DbCred.java
+src/main/java/com/webtech/databaseConnection/DbConnection.java
+src/main/java/com/webtech/databaseConnection/DataException.java
