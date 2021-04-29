@@ -1,6 +1,5 @@
 package com.webtech.infocard;
 
-import com.webtech.databaseConnection.DbConnection;
 import com.webtech.databaseConnection.Topic;
 import com.webtech.databaseConnection.TopicRepository;
 
