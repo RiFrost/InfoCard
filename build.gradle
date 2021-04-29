@@ -6,9 +6,13 @@ plugins {
 	id 'java'
 }
 
-group = 'com'
+group = 'com.webtech'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '14'
+
+springBoot {
+    mainClass = "com.webtech.InfocardApplication"
+}
 
 repositories {
 	mavenCentral()
