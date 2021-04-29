@@ -34,14 +34,14 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .home {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
 
-h1 {
-	font-weight: bolder;
+	h1 {
+		font-weight: bolder;
+	}
 }
 </style>
