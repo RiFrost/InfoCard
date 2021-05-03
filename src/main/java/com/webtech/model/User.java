@@ -16,7 +16,7 @@ public class User {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cred_id", referencedColumnName = "id")
+    @JoinColumn(name = "cred_id")
     private Credential credential;
 
     @JsonIgnore

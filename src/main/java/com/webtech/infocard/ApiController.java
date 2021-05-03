@@ -1,14 +1,10 @@
 package com.webtech.infocard;
 
-import com.webtech.model.Topic;
-import com.webtech.repository.TopicRepository;
+import com.webtech.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -17,23 +13,16 @@ import java.util.List;
 public class ApiController {
 
     @Autowired
-    private TopicRepository topicRepository;
+    private TopicService topicService;
 
     @GetMapping("/test")
     public String home() {
         return "InfoCard - Your new Way of learning!";
     }
 
-    // @GetMapping("/db")
-    // public String db() {
-    //   boolean checkDbConnection = DbConnection.getInstance().checkDbConnection();
-    //   return checkDbConnection ? "DB Verbindung erfolgreich" : "DB Verbindung fehlgeschlagen";
-    // }
-
-    @GetMapping("/topicList")
-    public List<Topic> getTopicList() {
-        List<Topic> topicList = topicRepository.findAll();
-        return topicList;
+    @GetMapping("/topic/{userId}")
+    public Map<Long, String> getTopicListFromUser(@PathVariable(name = "userId") Long userId) {
+        return topicService.getAllTopicsFromUser(userId);
     }
 
 }
