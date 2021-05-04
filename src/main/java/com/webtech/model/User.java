@@ -42,7 +42,6 @@ public class User {
     @Column(nullable = false, length = 60)
     @NotBlank(message = "email can't be blank")
     @Email(message = "invalid format")
-    @Size(min = 5, max = 60)
     private String email;
 
     public User() {
