@@ -1,9 +1,9 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
-	id 'org.springframework.boot' version '2.4.5'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
+    id 'org.springframework.boot' version '2.4.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
 }
 
 group = 'com.webtech'
@@ -15,36 +15,36 @@ springBoot {
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 processResources {
-	dependsOn 'copyDistToStatic'
+    dependsOn 'copyDistToStatic'
 }
 
 task copyDistToStatic(type: Copy) {
-	dependsOn 'npmRunBuild'
-	from "$projectDir/src/frontend/dist"
-	into "$buildDir/resources/main/static"
+    dependsOn 'npmRunBuild'
+    from "$projectDir/src/frontend/dist"
+    into "$buildDir/resources/main/static"
 }
 
 task npmRunBuild(type: Exec) {
-	dependsOn 'npmInstall'
-	workingDir './src/frontend'
-	String npm = 'npm';
-	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-		npm = 'npm.cmd'
-	}
-	commandLine npm, 'run', 'build'
+    dependsOn 'npmInstall'
+    workingDir './src/frontend'
+    String npm = 'npm';
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        npm = 'npm.cmd'
+    }
+    commandLine npm, 'run', 'build'
 }
 
 task npmInstall(type: Exec) {
-	workingDir './src/frontend'
-	String npm = 'npm';
-	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-		npm = 'npm.cmd'
-	}
-	commandLine npm, 'install'
+    workingDir './src/frontend'
+    String npm = 'npm';
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        npm = 'npm.cmd'
+    }
+    commandLine npm, 'install'
 }
 
 /*
@@ -61,17 +61,15 @@ task npmInstall(type: Exec) {
 */
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-/*	implementation 'com.oracle.database.jdbc:ojdbc8:19.6.0.0'
-	implementation 'com.oracle.database.jdbc:ucp:19.6.0.0'
-*/
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

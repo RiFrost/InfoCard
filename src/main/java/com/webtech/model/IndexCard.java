@@ -1,6 +1,7 @@
 package com.webtech.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "indexcard")
@@ -15,11 +16,13 @@ public class IndexCard {
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
+    @NotBlank(message = "question can't be blank")
     private String question;
 
     @Lob
-    @Column(nullable = true)
+    @Column(nullable = false)
+    @NotBlank(message = "answer can't be blank")
     private String answer;
 
     public IndexCard() {
