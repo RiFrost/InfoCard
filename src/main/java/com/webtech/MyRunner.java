@@ -36,8 +36,8 @@ public class MyRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        User user1 = new User("Maria", "H");
-        User user2 = new User("Richard", "F");
+        User user1 = new User("Maria", "H", "test@mail.de");
+        User user2 = new User("Richard", "F", "test@googlemail.de");
         Topic topic1 = new Topic(user1, "Allgemeinwissen");
         Topic topic2 = new Topic(user2, "Prog2");
         Topic topic3 = new Topic(user2, "Statistik");

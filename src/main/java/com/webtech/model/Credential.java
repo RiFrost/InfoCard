@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "credential")
+@Table(name = "credential"
+)
 public class Credential {
 
     @Id
@@ -16,9 +17,6 @@ public class Credential {
     @JsonIgnore
     @OneToOne(mappedBy = "credential")
     private User user;
-
-    @Column(nullable = false, length = 60)
-    private String email;
 
     @Column(name = "hashed_password", nullable = false)
     private String hashedPassword;
@@ -32,9 +30,8 @@ public class Credential {
     public Credential() {
     }
 
-    public Credential(User user, String email, String hashedPassword, String key, String salt) {
+    public Credential(User user, String hashedPassword, String key, String salt) {
         this.user = user;
-        this.email = email;
         this.hashedPassword = hashedPassword;
         this.key = key;
         this.salt = salt;
@@ -54,14 +51,6 @@ public class Credential {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getHashedPassword() {
@@ -93,7 +82,6 @@ public class Credential {
         return "Credential{" +
                 "id=" + id +
                 ", user=" + user +
-                ", email='" + email +
                 '}';
     }
 }
