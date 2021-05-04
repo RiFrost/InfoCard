@@ -3,6 +3,9 @@ package com.webtech.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,13 +29,20 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Topic> topics = new HashSet<>();
 
-    @Column(name = "first_name", nullable = false, length = 100)
+    @Column(name = "first_name", nullable = false, length = 50)
+    @NotBlank(message = "last name can't be blank")
+    @Size(min = 2, max = 50)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 100)
+    @Column(name = "last_name", nullable = false, length = 50)
+    @NotBlank(message = "last name can't be blank")
+    @Size(min = 2, max = 50)
     private String lastName;
 
     @Column(nullable = false, length = 60)
+    @NotBlank(message = "email can't be blank")
+    @Email(message = "invalid format")
+    @Size(min = 5, max = 60)
     private String email;
 
     public User() {
