@@ -35,6 +35,9 @@ public class User {
     @Column(nullable = false, length = 60)
     private String email;
 
+    @Column(nullable = false)
+    private String password;
+
     public User() {
     }
 
@@ -78,6 +81,14 @@ public class User {
 
     public Set<Topic> getTopics() {
         return topics;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

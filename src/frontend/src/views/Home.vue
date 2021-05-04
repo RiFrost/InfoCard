@@ -17,7 +17,6 @@ export default {
 
 	setup() {
 		const msg = ref("");
-		console.log(process.env);
 
 		onMounted(() => {
 			fetch(API + "/api/test")
