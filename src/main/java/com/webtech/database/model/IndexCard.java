@@ -1,4 +1,4 @@
-package com.webtech.model;
+package com.webtech.database.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

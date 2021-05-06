@@ -1,14 +1,10 @@
 package com.webtech;
 
-import com.webtech.model.EnumRole;
-import com.webtech.model.IndexCard;
-import com.webtech.model.Role;
-import com.webtech.model.Topic;
-import com.webtech.model.User;
-import com.webtech.repository.IndexCardRepository;
-import com.webtech.repository.RoleRepository;
-import com.webtech.repository.TopicRepository;
-import com.webtech.repository.UserRepository;
+import com.webtech.database.model.*;
+import com.webtech.database.repository.IndexCardRepository;
+import com.webtech.database.repository.RoleRepository;
+import com.webtech.database.repository.TopicRepository;
+import com.webtech.database.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
