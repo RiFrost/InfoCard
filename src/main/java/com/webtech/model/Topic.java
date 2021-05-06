@@ -22,7 +22,7 @@ public class Topic {
     private Set<IndexCard> indexCards = new HashSet<>();
 
     @ManyToOne()
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "users_id", nullable = false)
     private User user;
 
 
