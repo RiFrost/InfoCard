@@ -14,7 +14,7 @@ public class TopicService {
     @Autowired
     private UserService userService;
 
-    public Map<Long, String> getAllTopicsFromUser(Long userId) {
+    public Map<Long, String> getAllTopicsFromUser(String userId) {
         Map<Long, String> topicMap = new HashMap<>();
         Set<Topic> topicSet = userService.findById(userId).getTopics();
         for (Topic t : topicSet) {

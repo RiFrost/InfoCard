@@ -1,5 +1,6 @@
 package com.webtech.infocard;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,5 +14,7 @@ public class UIController {
   public ModelAndView redirect() {
     return new ModelAndView("forward:/");
   }
+
+  
   
 }
