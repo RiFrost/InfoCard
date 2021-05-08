@@ -17,9 +17,9 @@ public class UserService {
     //Exception sind noch verbesserbar!
     public User findById(String userId) {
         Optional<User> maybeUser = userRepo.findById(userId);
-        if (maybeUser.isEmpty()) {
-            throw new IllegalArgumentException("Userobjekt ist leer");
-        }
+//        if (maybeUser.isEmpty()) {
+//            throw new IllegalArgumentException("Userobjekt ist leer");
+//        }
         User user = maybeUser.orElseThrow(() -> new IllegalArgumentException("User " + userId + " does not exist!"));
         return user;
     }

@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -135,10 +134,28 @@ public class ApiController {
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
+    @PostMapping("/topic/{userId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<TopicResponse> addNewTopic(@Valid @RequestBody() TopicResponse topicResponse, @PathVariable(name = "userId") String userId) {
+        return ResponseEntity.ok(topicService.addTopic(userId, topicResponse));
+    }
+    
     @GetMapping("/topic/{userId}")
     @PreAuthorize("hasRole('USER')")
-    public Map<Long, String> getTopicListFromUser(@PathVariable(name = "userId") String userId) {
+    public List<TopicResponse> getTopicListFromUser(@Valid @PathVariable(name = "userId") String userId) {
         return topicService.getAllTopicsFromUser(userId);
+    }
+
+    @PostMapping("/topic")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> deleteSelectedTopics(@Valid @RequestBody() List<TopicResponse> topicResponseList) {
+        topicService.deleteTopics(topicResponseList);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/topic")
+    public ResponseEntity<TopicResponse> updateTopicName(@Valid @RequestBody() TopicResponse topicResponse) {
+        return ResponseEntity.ok(topicService.renameTopic(topicResponse));
     }
 
     @GetMapping("/showUsers")
