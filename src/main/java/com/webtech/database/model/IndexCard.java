@@ -1,5 +1,7 @@
 package com.webtech.database.model;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
@@ -21,6 +23,7 @@ public class IndexCard {
     private String question;
 
     @Lob
+    @Type(type = "text")
     @Column(nullable = false)
     @NotBlank(message = "answer can't be blank")
     private String answer;
