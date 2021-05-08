@@ -2,11 +2,11 @@ package com.webtech.database.service;
 
 import com.webtech.database.model.User;
 import com.webtech.database.repository.UserRepository;
+import com.webtech.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -14,14 +14,8 @@ public class UserService {
     @Autowired
     UserRepository userRepo;
 
-    //Exception sind noch verbesserbar!
     public User findById(String userId) {
-        Optional<User> maybeUser = userRepo.findById(userId);
-//        if (maybeUser.isEmpty()) {
-//            throw new IllegalArgumentException("Userobjekt ist leer");
-//        }
-        User user = maybeUser.orElseThrow(() -> new IllegalArgumentException("User " + userId + " does not exist!"));
-        return user;
+        return userRepo.findById(userId).orElseThrow(() -> new NotFoundException("UserId " + userId + " not found!"));
     }
 
     public List<User> getAllUsers() {

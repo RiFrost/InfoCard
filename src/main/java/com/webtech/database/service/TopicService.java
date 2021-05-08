@@ -3,6 +3,7 @@ package com.webtech.database.service;
 import com.webtech.database.model.Topic;
 import com.webtech.database.repository.TopicRepository;
 import com.webtech.database.repository.UserRepository;
+import com.webtech.exceptions.NotFoundException;
 import com.webtech.infocard.TopicResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,8 @@ public class TopicService {
     @Autowired
     UserRepository userRepo;
 
-    public Topic findTopicById(long topicId) {
-        return topicRepo.findById(topicId).orElseThrow(() -> new IllegalArgumentException("TopicId " + topicId + " does not exist!"));
+    public Topic findTopicById(Long topicId) {
+        return topicRepo.findById(topicId).orElseThrow(() -> new NotFoundException("TopicId " + topicId + " does not exist!"));
     }
 
     public TopicResponse addTopic(String userId, TopicResponse topicResponse) {
