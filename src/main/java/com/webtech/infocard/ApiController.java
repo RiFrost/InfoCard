@@ -5,6 +5,7 @@ import com.webtech.database.model.Role;
 import com.webtech.database.model.User;
 import com.webtech.database.repository.RoleRepository;
 import com.webtech.database.repository.UserRepository;
+import com.webtech.database.service.IndexCardService;
 import com.webtech.database.service.TopicService;
 import com.webtech.database.service.UserService;
 import com.webtech.security.jwt.JwtUtils;
@@ -42,19 +43,22 @@ public class ApiController {
     private UserService userService;
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private IndexCardService indexCardService;
 
     @Autowired
-    UserRepository userRepository;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    RoleRepository roleRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder encoder;
+    private RoleRepository roleRepository;
 
     @Autowired
-    JwtUtils jwtUtils;
+    private PasswordEncoder encoder;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @GetMapping("/test")
     @PreAuthorize("hasRole('USER')")
@@ -154,8 +158,34 @@ public class ApiController {
     }
 
     @PutMapping("/topic")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<TopicResponse> updateTopicName(@Valid @RequestBody() TopicResponse topicResponse) {
         return ResponseEntity.ok(topicService.renameTopic(topicResponse));
+    }
+
+    @PostMapping("/indexcard/{topicId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<IndexCardResponse> addNewIndexCard(@Valid @RequestBody() IndexCardResponse indexCardResponse, @PathVariable(name = "topicId") Long topicId) {
+        return ResponseEntity.ok(indexCardService.addIndexCard(topicId, indexCardResponse));
+    }
+
+    @GetMapping("/indexcard/{topicId}")
+    @PreAuthorize("hasRole('USER')")
+    public List<IndexCardResponse> getIndexCardListFromTopic(@Valid @PathVariable(name = "topicId") Long topicId) {
+        return indexCardService.getAllIndexCardsFromTopic(topicId);
+    }
+
+    @PostMapping("/indexcard")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> deleteSelectedIndexCards(@Valid @RequestBody() List<IndexCardResponse> indexCardResponseList) {
+        indexCardService.deleteIndexCard(indexCardResponseList);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/indexcard")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<IndexCardResponse> updateIndexCard(@Valid @RequestBody() IndexCardResponse indexCardResponse) {
+        return ResponseEntity.ok(indexCardService.renameIndexCard(indexCardResponse));
     }
 
     @GetMapping("/showUsers")

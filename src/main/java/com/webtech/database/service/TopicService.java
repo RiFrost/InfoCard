@@ -42,7 +42,7 @@ public class TopicService {
         }
         return topicList;
     }
-
+    
     public void deleteTopics(List<TopicResponse> topicResponseList) {
         for (TopicResponse topicR : topicResponseList) {
             if (topicRepo.existsById(topicR.getId())) {
