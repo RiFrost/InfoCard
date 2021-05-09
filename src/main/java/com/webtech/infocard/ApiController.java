@@ -1,21 +1,22 @@
 package com.webtech.infocard;
 
-import com.webtech.service.TopicService;
-import com.webtech.service.UserService;
-import com.webtech.model.EnumRole;
-import com.webtech.model.Role;
-import com.webtech.model.User;
-import com.webtech.repository.RoleRepository;
-import com.webtech.repository.UserRepository;
+import com.webtech.database.model.EnumRole;
+import com.webtech.database.model.Role;
+import com.webtech.database.model.User;
+import com.webtech.database.repository.RoleRepository;
+import com.webtech.database.repository.UserRepository;
+import com.webtech.database.service.IndexCardService;
+import com.webtech.database.service.TopicService;
+import com.webtech.database.service.UserService;
 import com.webtech.security.jwt.JwtUtils;
 import com.webtech.security.model.JwtResponse;
 import com.webtech.security.model.LoginRequest;
 import com.webtech.security.model.MessageResponse;
 import com.webtech.security.model.RegisterRequest;
 import com.webtech.security.service.UserDetailsImpl;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,15 +24,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.Valid;
 
 
 @RestController
@@ -46,19 +43,22 @@ public class ApiController {
     private UserService userService;
 
     @Autowired
-	AuthenticationManager authenticationManager;
+    private IndexCardService indexCardService;
 
-	@Autowired
-	UserRepository userRepository;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-	@Autowired
-	RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	PasswordEncoder encoder;
+    @Autowired
+    private RoleRepository roleRepository;
 
-	@Autowired
-	JwtUtils jwtUtils;
+    @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @GetMapping("/test")
     @PreAuthorize("hasRole('USER')")
@@ -67,84 +67,129 @@ public class ApiController {
     }
 
     @PostMapping("/login")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtUtils.generateJwtToken(authentication);
-		
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
-		List<String> roles = userDetails.getAuthorities().stream()
-				.map(item -> item.getAuthority())
-				.collect(Collectors.toList());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
 
-		return ResponseEntity.ok(new JwtResponse(jwt, 
-												 userDetails.getId(), 
-												 userDetails.getUsername(),
-                                                 userDetails.getLastname(), 
-												 userDetails.getEmail(), 
-												 roles));
-	}
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getLastname(),
+                userDetails.getEmail(),
+                roles));
+    }
 
     @PostMapping("/register")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-		if (userRepository.existsByEmail(registerRequest.getEmail())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Username is already taken!"));
-		}
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is already taken!"));
+        }
 
-		if (userRepository.existsByEmail(registerRequest.getEmail())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Email is already in use!"));
-		}
+        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already in use!"));
+        }
 
-		// Create new user's account
-		User user = new User(registerRequest.getFirstname(), 
-                             registerRequest.getLastname(),
-							 registerRequest.getEmail(),
-							 encoder.encode(registerRequest.getPassword()));
+        // Create new user's account
+        User user = new User(registerRequest.getFirstname(),
+                registerRequest.getLastname(),
+                registerRequest.getEmail(),
+                encoder.encode(registerRequest.getPassword()));
 
-		Set<String> reqRoles = registerRequest.getRole();
-		Set<Role> roles = new HashSet<>();
+        Set<String> reqRoles = registerRequest.getRole();
+        Set<Role> roles = new HashSet<>();
 
-		if (reqRoles == null) {
-			Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
-					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-			roles.add(userRole);
-		} else {
-			reqRoles.forEach(role -> {
-				switch (role) {
-				case "admin":
-					Role adminRole = roleRepository.findByName(EnumRole.ROLE_ADMIN)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					roles.add(adminRole);
+        if (reqRoles == null) {
+            Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
+        } else {
+            reqRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByName(EnumRole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(adminRole);
 
-					break;
-				default:
-					Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					roles.add(userRole);
-				}
-			});
-		}
+                        break;
+                    default:
+                        Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(userRole);
+                }
+            });
+        }
 
-		user.setRoles(roles);
-		userRepository.save(user);
+        user.setRoles(roles);
+        userRepository.save(user);
 
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-	}
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
 
+    @PostMapping("/topic/{userId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<TopicResponse> addNewTopic(@Valid @RequestBody() TopicResponse topicResponse, @PathVariable(name = "userId") String userId) {
+        return ResponseEntity.ok(topicService.addTopic(userId, topicResponse));
+    }
+    
     @GetMapping("/topic/{userId}")
-    public Map<Long, String> getTopicListFromUser(@PathVariable(name = "userId") String userId) {
+    @PreAuthorize("hasRole('USER')")
+    public List<TopicResponse> getTopicListFromUser(@Valid @PathVariable(name = "userId") String userId) {
         return topicService.getAllTopicsFromUser(userId);
     }
 
-    @GetMapping("/showUsers")
+    @PostMapping("/topic")
     @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> deleteSelectedTopics(@Valid @RequestBody() List<TopicResponse> topicResponseList) {
+        topicService.deleteTopics(topicResponseList);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/topic")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<TopicResponse> updateTopicName(@Valid @RequestBody() TopicResponse topicResponse) {
+        return ResponseEntity.ok(topicService.renameTopic(topicResponse));
+    }
+
+    @PostMapping("/indexcard/{topicId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<IndexCardResponse> addNewIndexCard(@Valid @RequestBody() IndexCardResponse indexCardResponse, @PathVariable(name = "topicId") Long topicId) {
+        return ResponseEntity.ok(indexCardService.addIndexCard(topicId, indexCardResponse));
+    }
+
+    @GetMapping("/indexcard/{topicId}")
+    @PreAuthorize("hasRole('USER')")
+    public List<IndexCardResponse> getIndexCardListFromTopic(@Valid @PathVariable(name = "topicId") Long topicId) {
+        return indexCardService.getAllIndexCardsFromTopic(topicId);
+    }
+
+    @PostMapping("/indexcard")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> deleteSelectedIndexCards(@Valid @RequestBody() List<IndexCardResponse> indexCardResponseList) {
+        indexCardService.deleteIndexCard(indexCardResponseList);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/indexcard")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<IndexCardResponse> updateIndexCard(@Valid @RequestBody() IndexCardResponse indexCardResponse) {
+        return ResponseEntity.ok(indexCardService.renameIndexCard(indexCardResponse));
+    }
+
+    @GetMapping("/showUsers")
+    //@PreAuthorize("hasRole('USER')")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
