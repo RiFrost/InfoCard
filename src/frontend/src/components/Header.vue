@@ -1,12 +1,14 @@
 <template>
 	<div class="header">
-		<div class="logo_container">
-			<img src="@/assets/logo.png" />
-		</div>
-		<div class="text_container">
-			<h1>InfoCard</h1>
-			<p>The New Way Of Learning</p>
-		</div>
+		<router-link to="/">
+			<div class="logo_container">
+				<img src="@/assets/logo.png" />
+			</div>
+			<div class="text_container">
+				<h1>InfoCard</h1>
+				<p>The New Way Of Learning</p>
+			</div>
+		</router-link>
 	</div>
 </template>
 

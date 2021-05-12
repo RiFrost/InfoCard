@@ -1,113 +1,150 @@
 <template>
-  <div class="home">
-    <h1>{{ msg }}</h1>
-    <h2>Willkommen {{ user.username }}</h2>
-    <p>
-      <button @click="getUsersNoAuth">
-        Console Log Users (no Auth needed)
-      </button>
-    </p>
-    <p>
-      <button @click="getUsers">Console Log Users (Auth needed!!!)</button>
-    </p>
-    <table>
-      <tr>
-        <th>Id</th>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>E-Mail</th>
-        <th>Password</th>
-      </tr>
-      <tr v-for="(item, index) in users" :key="index">
-        <td>{{ item.id }}</td>
-        <td>{{ item.firstname }}</td>
-        <td>{{ item.lastname }}</td>
-        <td>{{ item.email }}</td>
-        <td>{{ item.password }}</td>
-      </tr>
-    </table>
-  </div>
+	<div class="home">
+		<h1>{{ msg }}</h1>
+		<h2>Willkommen {{ user.firstname }}</h2>
+		<div class="buttons">
+			<router-link to="/login"><el-button>Login</el-button></router-link>
+			<router-link to="/register"><el-button>Register</el-button></router-link>
+			<el-button @click="getUsersNoAuth">
+				Console Log Users (no Auth needed)
+			</el-button>
+			<el-button @click="getUsers"
+				>Console Log Users (Auth needed!!!)</el-button
+			>
+		</div>
+
+		<el-table :data="users" style="width: 100%">
+			<el-table-column prop="id" label="Id" width="400"> </el-table-column>
+			<el-table-column prop="firstname" label="Firstname" width="180">
+			</el-table-column>
+			<el-table-column prop="lastname" label="Lastname" width="180">
+			</el-table-column>
+			<el-table-column prop="email" label="E-Mail" width="180">
+			</el-table-column>
+			<el-table-column prop="password" label="Password"> </el-table-column>
+		</el-table>
+	</div>
 </template>
 
 <script>
 import axios from "axios";
 import { ref, onBeforeMount } from "vue";
 import { useStore } from "vuex";
+import { ElMessage } from "element-plus";
 
 const API =
-  process.env.NODE_ENV === "production"
-    ? "https://infocard.herokuapp.com"
-    : "http://localhost:7000";
+	process.env.NODE_ENV === "production"
+		? "https://infocard.herokuapp.com"
+		: "http://localhost:7000";
 
 export default {
-  name: "Home",
+	name: "Home",
 
-  setup() {
-    const msg = ref("");
-    const users = ref([]);
+	setup() {
+		const msg = ref("");
+		const users = ref([]);
 
-    const store = useStore();
+		const store = useStore();
 
-    const user = store.state.user.user;
+		const user = store.state.user.user;
 
-    const config = {
-      headers: {
-        Authorization: user.tokenType + " " + user.accessToken
-      }
-    };
+		const config = {
+			headers: {
+				Authorization: user.tokenType + " " + user.accessToken,
+			},
+		};
 
-    function getUsersNoAuth() {
-      axios.get(API + "/api/showUsersNoAuth").then(res => {
-        users.value = res.data;
-        console.log(res.data);
-      });
-    }
+		function openErr(err) {
+			ElMessage({
+				message: err,
+				type: "error",
+			});
+		}
 
-    function getUsers() {
-      axios.get(API + "/api/showUsers", config).then(res => {
-        users.value = res.data;
-        console.log(res.data);
-      });
-    }
+		function openSuc() {
+			ElMessage({
+				message: "This is a success message",
+				type: "success",
+			});
+		}
 
-    onBeforeMount(() => {
-      axios
-        .get(API + "/api/test", config)
-        .then(res => {
-          return res;
-        })
-        .then(data => (msg.value = data.data));
-    });
+		function getUsersNoAuth() {
+			axios
+				.get(API + "/api/showUsersNoAuth")
+				.then((res) => {
+					openSuc();
+					users.value = res.data;
+					console.log(res);
+					console.log(res.data);
+				})
+				.catch((error) => {
+					openErr(error.response);
+				});
+		}
 
-    return {
-      msg,
-      users,
-      user,
-      getUsers,
-      getUsersNoAuth
-    };
-  }
+		function getUsers() {
+			axios
+				.get(API + "/api/showUsers", config)
+				.then((res) => {
+					openSuc();
+					users.value = res.data;
+				})
+				.catch(() => {
+					openErr("Unauthorized");
+				});
+		}
+
+		onBeforeMount(() => {
+			axios
+				.get(API + "/api/test", config)
+				.then((res) => {
+					return res;
+				})
+				.then((data) => (msg.value = data.data));
+		});
+
+		return {
+			msg,
+			users,
+			user,
+			getUsers,
+			getUsersNoAuth,
+		};
+	},
 };
 </script>
 
 <style lang="scss" scoped>
 .home {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 
-  h1 {
-    font-weight: bolder;
-  }
+	.buttons {
+		margin: 0 0 20px 0;
+		width: 30%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-content: space-between;
 
-  table {
-    th,
-    td {
-      border: 1px solid black;
-      padding: 10px;
-      text-align: center;
-    }
-  }
+		button {
+			margin: 0 !important;
+		}
+	}
+
+	h1 {
+		font-weight: bolder;
+	}
+
+	table {
+		th,
+		td {
+			border: 1px solid black;
+			padding: 10px;
+			text-align: center;
+		}
+	}
 }
 </style>

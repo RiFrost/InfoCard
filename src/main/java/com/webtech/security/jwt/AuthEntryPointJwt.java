@@ -33,9 +33,6 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
     body.put("path", request.getServletPath());
 
     System.out.println(body);
-
-    redirectStrategy.sendRedirect(request, response, "/login");
-
   }
 
 }

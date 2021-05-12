@@ -1,5 +1,9 @@
 package com.webtech;
 
+import java.util.HashSet;
+
+import com.webtech.database.model.EnumRole;
+import com.webtech.database.model.Role;
 import com.webtech.database.repository.IndexCardRepository;
 import com.webtech.database.repository.RoleRepository;
 import com.webtech.database.repository.TopicRepository;
@@ -28,7 +32,6 @@ public class MyRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 //        HashSet<Role> roles = new HashSet<Role>();
-//        roles.add(new Role(EnumRole.ROLE_USER));
 //        User user1 = new User("Maria", "Ha", "test@mail.de", "123456");
 //        user1.setRoles(roles);
 //        User user2 = new User("Richard", "Fr", "test@googlemail.de", "123456");
@@ -38,6 +41,8 @@ public class MyRunner implements CommandLineRunner {
 //        Topic topic3 = new Topic(user2, "Statistik");
 //        IndexCard indexCard1 = new IndexCard(topic1, "Frage", "Antwort");
 //        IndexCard indexCard2 = new IndexCard(topic2, "Frage1", "Antwort1");
+//        roleRepository.deleteById((long) 2);
+        //roles.add(new Role(EnumRole.ROLE_USER));
 //        roleRepository.saveAll(roles);
 //        userRepo.saveAll(List.of(user1, user2));
 //        topicRepo.saveAll(List.of(topic1, topic2, topic3));

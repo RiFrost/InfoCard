@@ -34,6 +34,7 @@
 <script>
 import { reactive } from "vue";
 import { useStore } from "vuex";
+import { ElMessage } from "element-plus";
 
 export default {
 	name: "LoginForm",
@@ -47,11 +48,22 @@ export default {
 			password: "",
 		});
 
-		function onSubmit() {
-			store.dispatch("user/login", {
-				email: form.email,
-				password: form.password,
+		function openErr(err) {
+			ElMessage({
+				message: err,
+				type: "error",
 			});
+		}
+
+		function onSubmit() {
+			store
+				.dispatch("user/login", {
+					email: form.email,
+					password: form.password,
+				})
+				.catch(() => {
+					openErr("Bad Credentials");
+				});
 		}
 
 		return {
