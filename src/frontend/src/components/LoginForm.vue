@@ -35,6 +35,7 @@
 import { reactive } from "vue";
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
+import { VueCookieNext } from "vue-cookie-next";
 
 export default {
 	name: "LoginForm",
@@ -60,6 +61,12 @@ export default {
 				.dispatch("user/login", {
 					email: form.email,
 					password: form.password,
+				})
+				.then(() => {
+					VueCookieNext.setCookie("TestKey", "TestValue", {
+						expire: "3min",
+						path: "/",
+					});
 				})
 				.catch(() => {
 					openErr("Bad Credentials");
