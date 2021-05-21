@@ -74,8 +74,6 @@ export default {
 				.then((res) => {
 					openSuc();
 					users.value = res.data;
-					console.log(res);
-					console.log(res.data);
 				})
 				.catch((error) => {
 					openErr(error.response);
