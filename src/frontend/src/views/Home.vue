@@ -5,6 +5,9 @@
 		<div class="buttons">
 			<router-link to="/login"><el-button>Login</el-button></router-link>
 			<router-link to="/register"><el-button>Register</el-button></router-link>
+			<el-button @click="logout">
+				Logout
+			</el-button>
 			<el-button @click="getUsersNoAuth">
 				Console Log Users (no Auth needed)
 			</el-button>
@@ -68,6 +71,10 @@ export default {
 			});
 		}
 
+		function logout() {
+			store.dispatch("user/logout");
+		}
+
 		function getUsersNoAuth() {
 			axios
 				.get(API + "/api/showUsersNoAuth")
@@ -108,6 +115,7 @@ export default {
 			user,
 			getUsers,
 			getUsersNoAuth,
+			logout,
 		};
 	},
 };
@@ -122,7 +130,7 @@ export default {
 
 	.buttons {
 		margin: 0 0 20px 0;
-		width: 30%;
+		width: 50%;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;

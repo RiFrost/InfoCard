@@ -92,10 +92,19 @@ export default {
 				});
 		},
 		logout({ commit }) {
-			return axios.post(`${API}/api/logout`).then((res) => {
-				commit("setUser", res.data);
-				console.log(res.data);
-			});
+			let user = {
+				accessToken: undefined,
+				id: undefined,
+				tokenType: undefined,
+			};
+
+			VueCookieNext.removeCookie("userToken");
+			VueCookieNext.removeCookie("userId");
+			VueCookieNext.removeCookie("userTokenType");
+			VueCookieNext.removeCookie("JSESSIONID");
+			commit("setUser", user);
+
+			router.go(0);
 		},
 	},
 };
