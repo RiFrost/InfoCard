@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.RedirectStrategy;
-import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +18,6 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-    
-    RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
