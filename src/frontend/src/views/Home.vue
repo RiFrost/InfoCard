@@ -81,6 +81,7 @@ export default {
 		}
 
 		function getUsers() {
+			console.log(user);
 			axios
 				.get(API + "/api/showUsers", config)
 				.then((res) => {
