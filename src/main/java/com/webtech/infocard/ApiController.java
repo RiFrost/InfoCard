@@ -15,11 +15,9 @@ import com.webtech.security.model.MessageResponse;
 import com.webtech.security.model.RegisterRequest;
 import com.webtech.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,7 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -64,34 +61,31 @@ public class ApiController {
     private JwtUtils jwtUtils;
 
     @GetMapping("/test")
+    @PreAuthorize("hasRole('USER')")
     public String home() {
         return "InfoCard - Your new Way of learning!";
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
+
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtUtils.generateJwtToken(authentication);
-    
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            List<String> roles = userDetails.getAuthorities().stream()
-                    .map(item -> item.getAuthority())
-                    .collect(Collectors.toList());
-    
-            return ResponseEntity.ok(new JwtResponse(jwt,
-                    userDetails.getId(),
-                    userDetails.getUsername(),
-                    userDetails.getLastname(),
-                    userDetails.getEmail(),
-                    roles));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
 
-        } catch(BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getLastname(),
+                userDetails.getEmail(),
+                roles));
     }
 
     @PostMapping("/register")
@@ -144,51 +138,51 @@ public class ApiController {
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
-    @PostMapping("/topic/{userId}")
+    @PostMapping("/topics/{userId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<TopicResponse> addNewTopic(@Valid @RequestBody() TopicResponse topicResponse, @PathVariable(name = "userId") String userId) {
-        return ResponseEntity.ok(topicService.addTopic(userId, topicResponse));
+    public ResponseEntity<TopicResponse> addNewTopic(@Valid @RequestBody TopicRequest topicRequest, @PathVariable(name = "userId") String userId) {
+        return ResponseEntity.ok(topicService.addTopic(userId, topicRequest));
     }
     
-    @GetMapping("/topic/{userId}")
+    @GetMapping("/topics/{userId}")
     @PreAuthorize("hasRole('USER')")
     public List<TopicResponse> getTopicListFromUser(@Valid @PathVariable(name = "userId") String userId) {
         return topicService.getAllTopicsFromUser(userId);
     }
 
-    @PostMapping("/topic")
+    @PostMapping("/topics")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> deleteSelectedTopics(@Valid @RequestBody() List<TopicResponse> topicResponseList) {
-        topicService.deleteTopics(topicResponseList);
+    public ResponseEntity<Void> deleteSelectedTopics(@Valid @RequestBody List<TopicRequest> requestTopicList) {
+        topicService.deleteTopics(requestTopicList);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/topic")
+    @PutMapping("/topics")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<TopicResponse> updateTopicName(@Valid @RequestBody() TopicResponse topicResponse) {
         return ResponseEntity.ok(topicService.renameTopic(topicResponse));
     }
 
-    @PostMapping("/indexcard/{topicId}")
+    @PostMapping("/indexcards/{topicId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<IndexCardResponse> addNewIndexCard(@Valid @RequestBody() IndexCardResponse indexCardResponse, @PathVariable(name = "topicId") Long topicId) {
         return ResponseEntity.ok(indexCardService.addIndexCard(topicId, indexCardResponse));
     }
 
-    @GetMapping("/indexcard/{topicId}")
+    @GetMapping("/indexcards/{topicId}")
     @PreAuthorize("hasRole('USER')")
     public List<IndexCardResponse> getIndexCardListFromTopic(@Valid @PathVariable(name = "topicId") Long topicId) {
         return indexCardService.getAllIndexCardsFromTopic(topicId);
     }
 
-    @PostMapping("/indexcard")
+    @PostMapping("/indexcards")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> deleteSelectedIndexCards(@Valid @RequestBody() List<IndexCardResponse> indexCardResponseList) {
         indexCardService.deleteIndexCard(indexCardResponseList);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/indexcard")
+    @PutMapping("/indexcards")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<IndexCardResponse> updateIndexCard(@Valid @RequestBody() IndexCardResponse indexCardResponse) {
         return ResponseEntity.ok(indexCardService.renameIndexCard(indexCardResponse));
@@ -204,5 +198,6 @@ public class ApiController {
     public List<User> getAllUsersNoAuth() {
         return userService.getAllUsers();
     }
+
 
 }
