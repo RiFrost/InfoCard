@@ -6,11 +6,21 @@
 </template>
 
 <script>
+import { onBeforeMount } from "vue";
+import { useStore } from "vuex";
 import Header from "./components/Header";
 
 export default {
 	components: {
 		"my-header": Header,
+	},
+
+	setup() {
+		const store = useStore();
+
+		onBeforeMount(() => {
+			store.dispatch("user/checkCookies");
+		});
 	},
 };
 </script>
