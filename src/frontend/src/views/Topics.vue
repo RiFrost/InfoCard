@@ -6,28 +6,45 @@
 			text-color="#606266"
 			active-text-color="#ffd04b"
 		>
-			<el-menu-item index="2" label="addTopics" style="float: right">
-				<fa @click="addTopic = true" icon="folder-plus" size="3x" />
+			<el-menu-item index="2" label="openPopup" style="float: right">
+				<fa
+					@click="openPopup.buttontrigger = true"
+					icon="folder-plus"
+					size="3x"
+				/>
 
-				<el-dialog title="Neues Thema" v-model="addTopic" width="30%" center>
-					<el-input
-						type="text"
-						placeholder="Please input"
-						v-model="topics.topicName"
-						maxlength="20"
-						show-word-limit
+				<el-dialog
+					v-if="openPopup.buttontrigger"
+					title="Neues Thema"
+					v-model="openPopup"
+					width="30%"
+					:show-close="false"
+					:close-on-click-modal="false"
+				>
+					<el-form
+						:model="form"
+						ref="formEl"
+						:rules="rules"
+						:status-icon="true"
+						label-width="120px"
+						label-position="top"
 					>
-					</el-input>
-					<template #footer>
-						<span class="dialog-footer">
-							<el-button
-								type="primary"
-								@click="[(addTopic = false), addNewTopic()]"
-								>Neues Thema erstellen</el-button
+						<el-form-item prop="name">
+							<el-input
+								v-model="form.name"
+								maxlength="30"
+								show-word-limit
+							></el-input>
+						</el-form-item>
+						<el-form-item align="center">
+							<el-button type="primary" @click="submitForm()"
+								>Bestätigen</el-button
 							>
-							<el-button @click="addTopic = false">Abbrechen</el-button>
-						</span>
-					</template>
+							<el-button @click="openPopup.buttontrigger = false"
+								>Abbrechen</el-button
+							>
+						</el-form-item>
+					</el-form>
 				</el-dialog>
 			</el-menu-item>
 			<el-menu-item
@@ -40,7 +57,12 @@
 		</el-menu>
 
 		<el-scrollbar max-height="480px">
-			<el-table :data="topics" :show-header="false" style="width: 100%;">
+			<el-table
+				:data="topics"
+				:show-header="false"
+				empty-text="Du hast noch keine Themen angelegt"
+				style="width: 100%;"
+			>
 				<el-table-column type="index" align="center" width="50">
 				</el-table-column>
 				<el-table-column prop="topicName" width="400"> </el-table-column>
@@ -71,7 +93,7 @@
 
 <script>
 import axios from "axios";
-import { ref, onBeforeMount } from "vue";
+import { ref, reactive, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 const API =
 	process.env.NODE_ENV === "production"
@@ -88,21 +110,35 @@ export default {
 	methods: {
 		handleEdit(index, row) {
 			console.log(index, row);
-		},
+		}
 	},
 
 	setup() {
 		const topics = ref([]);
 		const store = useStore();
 		const user = store.state.user.user;
-		console.log(user);
-		var addTopic = ref(false);
+		const openPopup = ref({
+			buttontrigger: false
+		});
+
+		const formEl = ref();
+		const form = reactive({
+			name: ""
+		});
+
+		const rules = {
+			name: [
+				{
+					required: true,
+					message: "Bitte gib einen neues Thema ein",
+					trigger: "blur"
+				}
+			]
+		};
 
 		function sortTopics() {
 			topics.value.sort((a, b) => a.id - b.id);
 		}
-
-		//    const input = ref("");
 
 		async function loadTopics() {
 			console.log("Themen werden geladen");
@@ -113,9 +149,6 @@ export default {
 				);
 				console.log("Themen wurden geladen");
 				topics.value = response.data;
-				// topics.value.sort(function(a, b) {
-				// 	return a.id - b.id;
-				// });
 				sortTopics();
 				console.log(topics.value);
 			} catch (e) {
@@ -137,16 +170,9 @@ export default {
 			loadTopics();
 		}
 
-		function handleClose(done) {
-			console.log("test");
-			done();
-			this.addTopic = false;
-		}
-
-		async function addNewTopic() {
-			// console.log(input.value);
-			console.log(topics.value.topicName);
-			let payload = { id: null, topicName: topics.value.topicName };
+		async function addNewTopic(topicName) {
+			console.log(topicName);
+			let payload = { id: null, topicName: topicName };
 			console.log(payload);
 			try {
 				let response = await axios.post(
@@ -158,8 +184,18 @@ export default {
 			} catch (e) {
 				console.error(e);
 			}
-			//      input.value = "";
 			loadTopics();
+		}
+
+		function submitForm() {
+			console.log("inside submit");
+			console.log(form.name);
+			formEl.value.validate((valid) => {
+				if (valid) {
+					addNewTopic(form.name);
+					openPopup.value.buttontrigger = false;
+				}
+			});
 		}
 
 		onBeforeMount(() => {
@@ -167,15 +203,17 @@ export default {
 		});
 
 		return {
-			addTopic,
+			openPopup,
+			formEl,
+			form,
+			rules,
 			loadTopics,
 			topics,
 			handleDelete,
-			handleClose,
-			//      input,
-			addNewTopic,
+			submitForm,
+			addNewTopic
 		};
-	},
+	}
 };
 </script>
 
