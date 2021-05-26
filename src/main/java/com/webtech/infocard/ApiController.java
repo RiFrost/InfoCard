@@ -159,8 +159,8 @@ public class ApiController {
 
     @PutMapping("/topics")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<TopicResponse> updateTopicName(@Valid @RequestBody() TopicResponse topicResponse) {
-        return ResponseEntity.ok(topicService.renameTopic(topicResponse));
+    public ResponseEntity<TopicRequest> updateTopicName(@Valid @RequestBody() TopicRequest topicRequest) {
+        return ResponseEntity.ok(topicService.renameTopic(topicRequest));
     }
 
     @PostMapping("/indexcards/{topicId}")

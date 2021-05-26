@@ -52,11 +52,11 @@ public class TopicService {
         }
     }
 
-    public TopicResponse renameTopic(TopicResponse topicResponse) {
-        Topic topic = findTopicById(topicResponse.getId());
-        topic.setTopicName(topicResponse.getTopicName());
+    public TopicRequest renameTopic(TopicRequest topicRequest) {
+        Topic topic = findTopicById(topicRequest.getId());
+        topic.setTopicName(topicRequest.getTopicName());
         topicRepo.save(topic);
-        return topicResponse;
+        return (TopicRequest) topicRequest;
     }
 
 }
