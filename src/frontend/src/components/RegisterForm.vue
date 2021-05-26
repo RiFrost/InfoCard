@@ -2,48 +2,13 @@
   <div class="main">
     <div class="main-header"></div>
     <div class="main-content">
-      <!--<form action="" role="form" @submit.prevent="onSubmit">
-        <img src="../assets/logo.png" />
-        <h2>Register</h2>
-        <div class="card">
-          <input
-            type="text"
-            placeholder="Firstname"
-            v-model="form.firstname"
-            required
-            name="firstname"
-          />
-          <input
-            type="text"
-            placeholder="Lastname"
-            v-model="form.lastname"
-            required
-            name="lastname"
-          />
-          <input
-            type="email"
-            placeholder="E-Mail"
-            v-model="form.email"
-            required
-            name="email"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            v-model="form.password"
-            required
-            name="password"
-          />
-          <button type="submit">Register</button>
-        </div>
-      </form>-->
-
       <el-form
         :model="form"
         ref="formEl"
         :rules="rules"
         :status-icon="true"
         label-width="120px"
+        @keyup.enter="submitForm()"
       >
         <img src="../assets/logo.png" />
         <h2>Register</h2>
@@ -57,7 +22,10 @@
           <el-input v-model="form.email"></el-input>
         </el-form-item>
         <el-form-item label="Password" prop="password">
-          <el-input type="password" v-model="form.password"></el-input>
+          <el-input v-model="form.password" show-password></el-input>
+        </el-form-item>
+        <el-form-item label="Confirm" prop="confirm">
+          <el-input v-model="form.confirm" show-password></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm()">Register</el-button>
@@ -84,7 +52,8 @@ export default {
       firstname: "",
       lastname: "",
       email: "",
-      password: ""
+      password: "",
+      confirm: ""
     });
 
     const rules = {
@@ -125,8 +94,19 @@ export default {
           message: "Must be 6 or longer",
           trigger: "blur"
         }
-      ]
+      ],
+      confirm: [{ required: true, validator: checkPassword, trigger: "blur" }]
     };
+
+    function checkPassword(rule, value, callback) {
+      if (value === "") {
+        callback(new Error("Please input the password again."));
+      } else if (value !== form.password) {
+        callback(new Error("Two inputs dont match!"));
+      } else {
+        callback();
+      }
+    }
 
     function submitForm() {
       console.log("inside submit");

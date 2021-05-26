@@ -39,8 +39,10 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const hasUser = store.getters["user/isAuthenticated"];
   const requieresLogin = to.matched.some(record => record.meta.requieresLogin);
+  const isRootPath = to.matched.some(record => record.path == "/");
 
   if (!hasUser && requieresLogin) next({ name: "Login" });
+  else if (hasUser && isRootPath) next({ name: "Topics" });
   else next();
 });
 
