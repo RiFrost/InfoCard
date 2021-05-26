@@ -8,6 +8,7 @@
         :rules="rules"
         :status-icon="true"
         label-width="120px"
+        @keyup.enter="submitForm()"
       >
         <img src="../assets/logo.png" />
         <h2>Login</h2>
