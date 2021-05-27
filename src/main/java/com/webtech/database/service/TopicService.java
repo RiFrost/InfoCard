@@ -8,10 +8,8 @@ import com.webtech.infocard.TopicRequest;
 import com.webtech.infocard.TopicResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TopicService {
@@ -36,12 +34,10 @@ public class TopicService {
     }
 
     public List<TopicResponse> getAllTopicsFromUser(String userId) {
-        List<TopicResponse> topicList = new ArrayList<>();
-        Set<Topic> topicSet = userService.findById(userId).getTopics();
-        for (Topic t : topicSet) {
-            topicList.add(new TopicResponse(t.getId(), t.getTopicName()));
-        }
-        return topicList;
+        List<Topic> topicList = topicRepo.findAllTopicsByUserId(userService.findById(userId).getId());
+        return topicList.stream()
+                .map(t -> new TopicResponse(t.getId(), t.getTopicName()))
+                .collect(Collectors.toList());
     }
     
     public void deleteTopics(List<TopicRequest> requestTopicList) {
