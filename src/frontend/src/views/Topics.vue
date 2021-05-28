@@ -29,7 +29,7 @@
 				Deine Übersicht
 			</el-menu-item>
 		</el-menu>
-		<el-scrollbar max-height="480px">
+		<el-scrollbar max-height="550px">
 			<el-table
 				:data="topics"
 				empty-text="Es gibt noch keine Themen"
@@ -52,9 +52,11 @@
 							content="auswählen"
 							placement="bottom"
 						>
-							<router-link class="router-link-indexcard" to="indexcards">{{
-								scope.row.topicName
-							}}</router-link>
+							<router-link
+								class="router-link-indexcard"
+								:to="{ name: 'indexcards', params: { id: scope.row.id } }"
+								>{{ scope.row.topicName }}</router-link
+							>
 						</el-tooltip>
 					</template>
 				</el-table-column>
@@ -84,7 +86,7 @@
 						</el-tooltip>
 					</template>
 				</el-table-column>
-				<el-table-column align="right" width="50">
+				<el-table-column align="center" width="60" style="text-overflow=unset;">
 					<template #default="scope">
 						<el-tooltip
 							class="item"

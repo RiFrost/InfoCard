@@ -41,10 +41,10 @@
 				></router-link>
 			</el-menu-item>
 			<el-menu-item class="headline" index="1" label="Topics" disabled>
-				Deine Übersicht
+				Deine Übersicht {{ $route.params.id }}
 			</el-menu-item>
 		</el-menu>
-		<el-scrollbar max-height="480px">
+		<el-scrollbar max-height="550px">
 			<el-table
 				:data="tableData"
 				:show-header="false"
@@ -94,6 +94,16 @@
 </template>
 
 <script>
+import axios from "axios";
+import { ref, onBeforeMount } from "vue";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+
+const API =
+	process.env.NODE_ENV === "production"
+		? "https://infocard.herokuapp.com/api"
+		: "http://localhost:7000/api";
+
 export default {
 	name: "Indexcards",
 	data() {
@@ -122,7 +132,42 @@ export default {
 			]
 		};
 	},
-	setup() {}
+	setup() {
+		const store = useStore();
+		const user = store.state.user.user;
+
+		const config = {
+			headers: {
+				Authorization: user.tokenType + " " + user.accessToken
+			}
+		};
+
+		const indexCards = ref([]);
+		const route = useRoute();
+
+		async function loadIndexCards() {
+			console.log("load index cards");
+			try {
+				let response = await axios.get(
+					`${API}/indexcards/${route.params.id}`,
+					config
+				);
+				console.log(response.data);
+				console.log("index cards loaded");
+				indexCards.value = response.data;
+				console.log(indexCards.value);
+			} catch (e) {
+				console.error(e);
+			}
+		}
+
+		onBeforeMount(() => {
+			return loadIndexCards();
+		});
+		return {
+			indexCards
+		};
+	}
 };
 </script>
 

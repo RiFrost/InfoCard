@@ -32,7 +32,7 @@ const routes = [
 	},
 	{
 		path: "/indexcards",
-		name: "Indexcards",
+		name: "indexcards",
 		component: Indexcards,
 		meta: {
 			requieresLogin: true
