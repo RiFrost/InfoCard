@@ -1,16 +1,21 @@
 <template>
-	<el-main style="width: 80%;  margin: auto;">
+	<el-main style="width: 80%; margin: auto">
 		<el-menu
 			class="el-menu-demo"
 			mode="horizontal"
 			text-color="#606266"
 			active-text-color="#ffd04b"
 		>
-			<el-menu-item index="2" label="openPopup" style="float: right">
+			<el-menu-item
+				class="folder"
+				index="3"
+				label="openPopup"
+				style="color: transparent; border-bottom-color: transparent;"
+			>
 				<el-tooltip
 					class="item"
 					effect="dark"
-					content="Neues Thema anlegen"
+					content="hinzufügen"
 					placement="bottom"
 				>
 					<fa
@@ -20,30 +25,39 @@
 					/>
 				</el-tooltip>
 			</el-menu-item>
-			<el-menu-item
-				index="1"
-				label="Topics"
-				style="float: left; font-size: 20px; font-weight: bold"
-			>
-				Deine Themen
+			<el-menu-item class="headline" index="2" label="Topics" disabled>
+				Deine Übersicht
 			</el-menu-item>
 		</el-menu>
 		<el-scrollbar max-height="480px">
 			<el-table
 				:data="topics"
-				:show-header="false"
 				empty-text="Es gibt noch keine Themen"
-				style="width: 100%;"
+				style="width: 100%"
 			>
 				<el-table-column type="index" align="center" width="50">
 				</el-table-column>
-				<el-table-column prop="topicName" width="400"> </el-table-column>
-				<el-table-column width="50">
+				<el-table-column
+					class="text-column"
+					label="Thema"
+					prop="topicName"
+					width="400"
+				>
+				</el-table-column>
+				<el-table-column
+					class="text-column"
+					label="Karteikartenanzahl"
+					prop="indexCardCount"
+					width="200"
+					align="center"
+				>
+				</el-table-column>
+				<el-table-column align="right">
 					<template #default="scope">
 						<el-tooltip
 							class="item"
 							effect="dark"
-							content="Themenbezeichnung bearbeiten"
+							content="bearbeiten"
 							placement="bottom"
 						>
 							<fa
@@ -55,12 +69,12 @@
 						</el-tooltip>
 					</template>
 				</el-table-column>
-				<el-table-column align="left">
+				<el-table-column align="right" width="50">
 					<template #default="scope">
 						<el-tooltip
 							class="item"
 							effect="dark"
-							content="Thema löschen"
+							content="löschen"
 							placement="bottom"
 						>
 							<fa
@@ -128,7 +142,7 @@
 				<el-form-item prop="name">
 					<el-input
 						v-model="form.name"
-						maxlength="30"
+						maxlength="40"
 						show-word-limit
 					></el-input>
 				</el-form-item>
@@ -152,7 +166,7 @@
 			:close-on-click-modal="false"
 			center
 		>
-			<div style="text-align:center;">
+			<div style="text-align: center">
 				<el-button type="primary" @click="submitDeleteTopic()" center
 					>Bestätigen</el-button
 				>
@@ -167,15 +181,18 @@
 import axios from "axios";
 import { ref, reactive, onBeforeMount } from "vue";
 import { useStore } from "vuex";
+
 const API =
 	process.env.NODE_ENV === "production"
 		? "https://infocard.herokuapp.com/api"
 		: "http://localhost:7000/api";
+
 export default {
 	name: "Topics",
 	components: {
 		//    Popup: Popup,
 	},
+
 	setup() {
 		const topics = ref([]);
 		const store = useStore();
@@ -206,10 +223,24 @@ export default {
 		const rules = {
 			name: {
 				required: true,
-				message: "Bitte gib einen neues Thema ein",
+				message: "Bitte gib ein neues Thema ein",
 				trigger: "blur"
 			}
 		};
+
+		function removeTopic(index) {
+			var removeIndex = topics.value
+				.map(function(item) {
+					return item.id;
+				})
+				.indexOf(index);
+			topics.value.splice(removeIndex, 1);
+		}
+
+		function renameTopic(index, name) {
+			var objIndex = topics.value.findIndex((obj) => obj.id == index);
+			topics.value[objIndex].topicName = name;
+		}
 
 		function openDialog(index, row, specificPopup) {
 			dialog.index = index;
@@ -222,29 +253,33 @@ export default {
 		}
 
 		async function loadTopics() {
-			console.log("Themen werden geladen");
+			console.log("load topics");
 			console.log(user);
 			try {
 				let response = await axios.get(`${API}/topics/${user.id}`, config);
-				console.log("Themen wurden geladen");
+				console.log("topics loaded");
 				topics.value = response.data;
 				console.log(topics.value);
 			} catch (e) {
 				console.error(e);
 			}
 		}
+
 		async function submitDeleteTopic() {
-			console.log("Topic wird gelöscht");
+			console.log("deletes topic");
+			console.log(dialog.row.id);
+
 			let payload = [{ id: dialog.row.id, topicName: dialog.row.topicName }];
 			console.log(payload);
 			try {
 				let response = await axios.post(`${API}/topics`, payload, config);
-				console.log("Topic wurde gelöscht");
-				console.log(response.status);
+				if (response.status === 200) {
+					removeTopic(dialog.row.id);
+					console.log("topic is deleted");
+				}
 			} catch (e) {
 				console.error(e);
 			}
-			loadTopics();
 			openPopup.value.buttontriggerDeleteTopic = false;
 		}
 
@@ -257,12 +292,12 @@ export default {
 					payload,
 					config
 				);
-				console.log("Thema wurde angelegt");
 				console.log(response.data);
+				topics.value.push(response.data);
+				console.log("Topic was added");
 			} catch (e) {
 				console.error(e);
 			}
-			loadTopics();
 		}
 
 		function submitNewTopic() {
@@ -283,9 +318,10 @@ export default {
 			console.log(payload);
 			try {
 				let response = await axios.put(`${API}/topics`, payload, config);
-				console.log("Topicname has changed");
-				console.log(response.status);
-				loadTopics();
+				if (response.status === 200) {
+					renameTopic(dialog.row.id, form.name);
+					console.log("Topicname has changed");
+				}
 			} catch (e) {
 				console.error(e);
 			}
@@ -295,8 +331,9 @@ export default {
 			console.log("inside submit");
 			formEl.value.validate((valid) => {
 				if (valid) {
-					getRenamedTopic();
-					form.name = "";
+					getRenamedTopic().then(() => {
+						form.name = "";
+					});
 					openPopup.value.buttontriggerChangeName = false;
 				}
 			});
@@ -324,7 +361,56 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+$icon-color: #1d2231;
+$icon-hover: pointer;
+$icon-opacity: 0.7;
+
 .el-menu {
 	background: #ffffff;
+}
+
+.el-main {
+	padding: 0%;
+	-webkit-box-shadow: 4px 5px 15px 5px rgba(0, 0, 0, 0.09);
+	box-shadow: 4px 5px 15px 5px rgba(0, 0, 0, 0.09);
+}
+
+.fa-trash-alt {
+	color: $icon-color;
+
+	:hover {
+		opacity: $icon-opacity;
+		cursor: $icon-hover;
+	}
+}
+
+.fa-pen {
+	color: $icon-color;
+	:hover {
+		opacity: $icon-opacity;
+		cursor: $icon-hover;
+	}
+}
+
+.el-menu-item.is-disabled.headline {
+	float: left;
+	font-size: 22px;
+	font-weight: bold;
+	cursor: context-menu;
+	opacity: 1;
+}
+
+.el-menu-item.folder {
+	float: right;
+	.fa-folder-plus {
+		color: $icon-color;
+		:hover {
+			opacity: $icon-opacity;
+		}
+	}
+}
+
+.el-table {
+	font-size: 17px;
 }
 </style>
