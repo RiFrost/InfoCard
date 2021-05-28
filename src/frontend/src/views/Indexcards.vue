@@ -46,56 +46,107 @@
 		</el-menu>
 		<el-scrollbar max-height="550px">
 			<el-table
-				:data="tableData"
+				:data="indexCards"
 				:show-header="false"
 				style="width: 100%; text-align: center;"
 			>
 				<el-table-column
-					prop="date"
+					prop="question"
 					label="Date"
 					style="display: flex;justify-content: center; text-align: center;"
 				>
-					<div class="test">
-						<el-card class="box-card">
-							<template #header>
-								<div class="card-header">
-									<span>Card name</span>
-									<el-button class="button" type="text"
-										>Operation button</el-button
-									>
+					<template #default="scope">
+						<div class="test">
+							<el-card class="box-card">
+								<template #header>
+									<div class="card-header">
+										<span>{{ scope.row.question }}</span>
+
+										<el-tooltip
+											class="item"
+											effect="dark"
+											content="löschen"
+											placement="bottom"
+										>
+											<fa
+												icon="trash-alt"
+												size="2x"
+												@click="openDialog(scope.$index, scope.row, 'delete')"
+												>Delete</fa
+											>
+										</el-tooltip>
+									</div>
+								</template>
+								<div class="text item">
+									{{ scope.row.answer }}
 								</div>
-							</template>
-							<div v-for="o in 4" :key="o" class="text item">
-								{{ "List item " + o }}
-							</div>
-						</el-card>
-					</div>
-				</el-table-column>
-				<el-table-column prop="name" label="Name">
-					<div class="test">
-						<el-card class="box-card">
-							<template #header>
-								<div class="card-header">
-									<span>Card name</span>
-									<el-button class="button" type="text"
-										>Operation button</el-button
-									>
+							</el-card>
+						</div>
+
+						<!-- <div class="test">
+							<el-card class="box-card">
+								<template #header>
+									<div class="card-header">
+										<span>{{ scope.row.question + 1 }}</span>
+										<el-button class="button" type="text"
+											>Operation button</el-button
+										>
+									</div>
+								</template>
+								<div v-for="o in 4" :key="o" class="text item">
+									{{ "List item " + o }}
 								</div>
-							</template>
-							<div v-for="o in 4" :key="o" class="text item">
-								{{ "List item " + o }}
-							</div>
-						</el-card>
-					</div>
+							</el-card>
+						</div> -->
+					</template>
 				</el-table-column>
+				<!-- <el-table-column prop="name" label="Name">
+					<template #default="scope">
+						<div class="test">
+							<el-card class="box-card">
+								<template #header>
+									<div class="card-header">
+										<span>{{ scope.row.question }}</span>
+										<el-button class="button" type="text"
+											>Operation button</el-button
+										>
+									</div>
+								</template>
+								<div v-for="o in 4" :key="o" class="text item">
+									{{ "List item " + o }}
+								</div>
+							</el-card>
+						</div>
+					</template>
+				</el-table-column> -->
 			</el-table>
 		</el-scrollbar>
+		<el-dialog
+			v-if="openPopup.buttontriggerDeleteIndexCard"
+			title="Karteikarte wirklich löschen?"
+			v-model="openPopup.buttontriggerDeleteIndexCard"
+			width="30%"
+			:show-close="false"
+			:close-on-click-modal="false"
+			center
+		>
+			<div style="text-align: center">
+				<el-button type="primary" @click="submitDeleteIndexCard()" center
+					>Bestätigen</el-button
+				>
+				<el-button
+					@click="openPopup.buttontriggerDeleteIndexCard = false"
+					center
+					>Abbrechen</el-button
+				>
+			</div>
+		</el-dialog>
 	</el-main>
 </template>
 
 <script>
 import axios from "axios";
-import { ref, onBeforeMount } from "vue";
+import { ref, reactive, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
@@ -106,32 +157,7 @@ const API =
 
 export default {
 	name: "Indexcards",
-	data() {
-		return {
-			tableData: [
-				{
-					date: "2016-05-03",
-					name: "Tom",
-					address: "No. 189, Grove St, Los Angeles"
-				},
-				{
-					date: "2016-05-02",
-					name: "Tom",
-					address: "No. 189, Grove St, Los Angeles"
-				},
-				{
-					date: "2016-05-04",
-					name: "Tom",
-					address: "No. 189, Grove St, Los Angeles"
-				},
-				{
-					date: "2016-05-01",
-					name: "Tom",
-					address: "No. 189, Grove St, Los Angeles"
-				}
-			]
-		};
-	},
+
 	setup() {
 		const store = useStore();
 		const user = store.state.user.user;
@@ -144,6 +170,37 @@ export default {
 
 		const indexCards = ref([]);
 		const route = useRoute();
+
+		const openPopup = ref({
+			buttontriggerNewTopic: false,
+			buttontriggerChangeName: false,
+			buttontriggerDeleteIndexCard: false
+		});
+
+		const dialog = reactive({
+			index: "",
+			row: ""
+		});
+
+		function openDialog(index, row, specificPopup) {
+			dialog.index = index;
+			dialog.row = row;
+			if (specificPopup == "delete") {
+				openPopup.value.buttontriggerDeleteIndexCard = true;
+			}
+			// else if (specificPopup == "change") {
+			// 	openPopup.value.buttontriggerChangeName = true;
+			// }
+		}
+
+		function removeObjOfArray(arr, index) {
+			var removeIndex = arr.value
+				.map(function(item) {
+					return item.id;
+				})
+				.indexOf(index);
+			arr.value.splice(removeIndex, 1);
+		}
 
 		async function loadIndexCards() {
 			console.log("load index cards");
@@ -161,11 +218,38 @@ export default {
 			}
 		}
 
+		async function submitDeleteIndexCard() {
+			console.log("deletes index card");
+			console.log(dialog.row.id);
+
+			let payload = [
+				{
+					id: dialog.row.id,
+					question: dialog.row.question,
+					answer: dialog.row.answer
+				}
+			];
+			console.log(payload);
+			try {
+				let response = await axios.post(`${API}/indexcards`, payload, config);
+				if (response.status === 200) {
+					removeObjOfArray(indexCards, dialog.row.id);
+					console.log("index card is deleted");
+				}
+			} catch (e) {
+				console.error(e);
+			}
+			openPopup.value.buttontriggerDeleteIndexCard = false;
+		}
+
 		onBeforeMount(() => {
 			return loadIndexCards();
 		});
 		return {
-			indexCards
+			indexCards,
+			openDialog,
+			openPopup,
+			submitDeleteIndexCard
 		};
 	}
 };

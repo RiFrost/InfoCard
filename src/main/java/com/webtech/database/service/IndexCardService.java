@@ -3,6 +3,7 @@ package com.webtech.database.service;
 import com.webtech.database.model.IndexCard;
 import com.webtech.database.repository.IndexCardRepository;
 import com.webtech.exceptions.NotFoundException;
+import com.webtech.infocard.IndexCardRequest;
 import com.webtech.infocard.IndexCardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class IndexCardService {
@@ -31,16 +33,15 @@ public class IndexCardService {
     }
 
     public List<IndexCardResponse> getAllIndexCardsFromTopic(Long topicId) {
-        List<IndexCardResponse> topicList = new ArrayList<>();
-        Set<IndexCard> topicSet = topicService.findTopicById(topicId).getIndexCards();
-        for (IndexCard index : topicSet) {
-            topicList.add(new IndexCardResponse(index.getId(), index.getQuestion(), index.getAnswer()));
-        }
-        return topicList;
+        List<IndexCard> indexCardList = indexCardRepo.findAllIndexCardsByTopicId(topicService.findTopicById(topicId).getId());
+        
+        return indexCardList.stream()
+        .map(i -> new IndexCardResponse(i.getId(), i.getQuestion(), i.getAnswer()))
+        .collect(Collectors.toList());
     }
 
-    public void deleteIndexCard(List<IndexCardResponse> indexCardResponseList) {
-        for (IndexCardResponse cardR : indexCardResponseList) {
+    public void deleteIndexCard(List<IndexCardRequest> indexCardRequestList) {
+        for (IndexCardRequest cardR : indexCardRequestList) {
             if (indexCardRepo.existsById(cardR.getId())) {
                 indexCardRepo.delete(findIndexCardById(cardR.getId()));
             }

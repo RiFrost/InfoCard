@@ -179,8 +179,8 @@ public class ApiController {
 
     @PostMapping("/indexcards")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> deleteSelectedIndexCards(@Valid @RequestBody() List<IndexCardResponse> indexCardResponseList) {
-        indexCardService.deleteIndexCard(indexCardResponseList);
+    public ResponseEntity<Void> deleteSelectedIndexCards(@Valid @RequestBody() List<IndexCardRequest> indexCardRequestList) {
+        indexCardService.deleteIndexCard(indexCardRequestList);
         return ResponseEntity.ok().build();
     }
 
