@@ -11,9 +11,11 @@ import {
 	faFolderPlus,
 	faPen,
 	faTrashAlt,
+	faPlusSquare,
+	faCaretSquareLeft
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faFolderPlus, faPen, faTrashAlt);
+library.add(faFolderPlus, faPen, faTrashAlt, faPlusSquare, faCaretSquareLeft);
 
 createApp(App)
 	.use(store)

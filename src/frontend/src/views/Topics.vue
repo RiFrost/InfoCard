@@ -10,7 +10,7 @@
 				class="folder"
 				index="3"
 				label="openPopup"
-				style="color: transparent; border-bottom-color: transparent;"
+				style="border-bottom: none;"
 			>
 				<el-tooltip
 					class="item"
@@ -37,13 +37,28 @@
 			>
 				<el-table-column type="index" align="center" width="50">
 				</el-table-column>
+
 				<el-table-column
+					type="link"
 					class="text-column"
 					label="Thema"
 					prop="topicName"
 					width="400"
 				>
+					<template #default="scope">
+						<el-tooltip
+							class="item"
+							effect="dark"
+							content="auswählen"
+							placement="bottom"
+						>
+							<router-link class="router-link-indexcard" to="indexcards">{{
+								scope.row.topicName
+							}}</router-link>
+						</el-tooltip>
+					</template>
 				</el-table-column>
+
 				<el-table-column
 					class="text-column"
 					label="Karteikartenanzahl"
@@ -365,20 +380,15 @@ $icon-color: #1d2231;
 $icon-hover: pointer;
 $icon-opacity: 0.7;
 
-.el-menu {
-	background: #ffffff;
-}
-
 .el-main {
-	padding: 0%;
+	padding: 0;
 	-webkit-box-shadow: 4px 5px 15px 5px rgba(0, 0, 0, 0.09);
 	box-shadow: 4px 5px 15px 5px rgba(0, 0, 0, 0.09);
 }
 
 .fa-trash-alt {
 	color: $icon-color;
-
-	:hover {
+	&:hover {
 		opacity: $icon-opacity;
 		cursor: $icon-hover;
 	}
@@ -386,10 +396,19 @@ $icon-opacity: 0.7;
 
 .fa-pen {
 	color: $icon-color;
-	:hover {
+	&:hover {
 		opacity: $icon-opacity;
 		cursor: $icon-hover;
 	}
+}
+
+.el-table {
+	background: #ffffff;
+	font-size: 17px;
+}
+
+.el-menu-item {
+	font-size: unset;
 }
 
 .el-menu-item.is-disabled.headline {
@@ -401,16 +420,22 @@ $icon-opacity: 0.7;
 }
 
 .el-menu-item.folder {
+	font-size: 20 !important;
 	float: right;
 	.fa-folder-plus {
 		color: $icon-color;
-		:hover {
+		&:hover {
 			opacity: $icon-opacity;
 		}
 	}
 }
 
-.el-table {
-	font-size: 17px;
+.router-link-indexcard {
+	color: rgb(96, 98, 102);
+	text-decoration: none;
+	&:hover {
+		font-weight: bold;
+		opacity: $icon-opacity;
+	}
 }
 </style>
