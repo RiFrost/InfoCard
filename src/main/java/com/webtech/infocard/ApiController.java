@@ -2,6 +2,7 @@ package com.webtech.infocard;
 
 import com.webtech.database.model.EnumRole;
 import com.webtech.database.model.Role;
+import com.webtech.database.model.Topic;
 import com.webtech.database.model.User;
 import com.webtech.database.repository.RoleRepository;
 import com.webtech.database.repository.UserRepository;
@@ -143,12 +144,13 @@ public class ApiController {
     public ResponseEntity<TopicResponse> addNewTopic(@Valid @RequestBody TopicRequest topicRequest, @PathVariable(name = "userId") String userId) {
         return ResponseEntity.ok(topicService.addTopic(userId, topicRequest));
     }
-    
+
     @GetMapping("/topics/{userId}")
     @PreAuthorize("hasRole('USER')")
     public List<TopicResponse> getTopicListFromUser(@Valid @PathVariable(name = "userId") String userId) {
         return topicService.getAllTopicsFromUser(userId);
     }
+
 
     @PostMapping("/topics")
     @PreAuthorize("hasRole('USER')")
