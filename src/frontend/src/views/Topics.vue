@@ -133,9 +133,7 @@
 					<el-button type="primary" @click="submitNewName()"
 						>Bestätigen</el-button
 					>
-					<el-button @click="openPopup.buttontriggerChangeName = false"
-						>Abbrechen</el-button
-					>
+					<el-button @click="resetForm()">Abbrechen</el-button>
 				</el-form-item>
 			</el-form>
 		</el-dialog>
@@ -167,9 +165,7 @@
 					<el-button type="primary" @click="submitNewTopic()"
 						>Bestätigen</el-button
 					>
-					<el-button @click="openPopup.buttontriggerNewTopic = false"
-						>Abbrechen</el-button
-					>
+					<el-button @click="resetForm()">Abbrechen</el-button>
 				</el-form-item>
 			</el-form>
 		</el-dialog>
@@ -226,15 +222,15 @@ export default {
 			}
 		};
 
+		const formEl = ref();
+		const form = reactive({
+			name: ""
+		});
+
 		const openPopup = ref({
 			buttontriggerNewTopic: false,
 			buttontriggerChangeName: false,
 			buttontriggerDeleteTopic: false
-		});
-
-		const formEl = ref();
-		const form = reactive({
-			name: ""
 		});
 
 		const rules = {
@@ -244,6 +240,12 @@ export default {
 				trigger: "blur"
 			}
 		};
+
+		function resetForm() {
+			formEl.value.resetFields();
+			openPopup.value.buttontriggerNewTopic = false;
+			openPopup.value.buttontriggerChangeName = false;
+		}
 
 		function removeTopic(index) {
 			var removeIndex = topics.value
@@ -323,8 +325,7 @@ export default {
 			formEl.value.validate((valid) => {
 				if (valid) {
 					addNewTopic(form.name);
-					form.name = "";
-					openPopup.value.buttontriggerNewTopic = false;
+					resetForm();
 				}
 			});
 		}
@@ -349,9 +350,8 @@ export default {
 			formEl.value.validate((valid) => {
 				if (valid) {
 					getRenamedTopic().then(() => {
-						form.name = "";
+						resetForm();
 					});
-					openPopup.value.buttontriggerChangeName = false;
 				}
 			});
 		}
@@ -372,7 +372,8 @@ export default {
 			form,
 			formEl,
 			openDialog,
-			dialog
+			dialog,
+			resetForm
 		};
 	}
 };
@@ -381,6 +382,7 @@ export default {
 $icon-color: #1d2231;
 $icon-hover: pointer;
 $icon-opacity: 0.7;
+$icon-size: 1.5rem;
 
 .el-main {
 	padding: 0;
@@ -388,15 +390,9 @@ $icon-opacity: 0.7;
 	box-shadow: 4px 5px 15px 5px rgba(0, 0, 0, 0.09);
 }
 
+.fa-pen,
 .fa-trash-alt {
-	color: $icon-color;
-	&:hover {
-		opacity: $icon-opacity;
-		cursor: $icon-hover;
-	}
-}
-
-.fa-pen {
+	font-size: $icon-size;
 	color: $icon-color;
 	&:hover {
 		opacity: $icon-opacity;
