@@ -2,7 +2,6 @@ package com.webtech.infocard;
 
 import com.webtech.database.model.EnumRole;
 import com.webtech.database.model.Role;
-import com.webtech.database.model.Topic;
 import com.webtech.database.model.User;
 import com.webtech.database.repository.RoleRepository;
 import com.webtech.database.repository.UserRepository;
@@ -141,8 +140,8 @@ public class ApiController {
 
     @PostMapping("/topics/{userId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<TopicResponse> addNewTopic(@Valid @RequestBody TopicRequest topicRequest, @PathVariable(name = "userId") String userId) {
-        return ResponseEntity.ok(topicService.addTopic(userId, topicRequest));
+    public ResponseEntity<TopicResponse> addNewTopic(@Valid @RequestBody TopicResponse topicResponse, @PathVariable(name = "userId") String userId) {
+        return ResponseEntity.ok(topicService.addTopic(userId, topicResponse));
     }
 
     @GetMapping("/topics/{userId}")
@@ -154,15 +153,15 @@ public class ApiController {
 
     @PostMapping("/topics")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> deleteSelectedTopics(@Valid @RequestBody List<TopicRequest> requestTopicList) {
-        topicService.deleteTopics(requestTopicList);
+    public ResponseEntity<Void> deleteSelectedTopics(@Valid @RequestBody List<TopicResponse> TopicResList) {
+        topicService.deleteTopics(TopicResList);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/topics")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<TopicRequest> updateTopicName(@Valid @RequestBody() TopicRequest topicRequest) {
-        return ResponseEntity.ok(topicService.renameTopic(topicRequest));
+    public ResponseEntity<TopicResponse> updateTopicName(@Valid @RequestBody() TopicResponse topicResponse) {
+        return ResponseEntity.ok(topicService.renameTopic(topicResponse));
     }
 
     @PostMapping("/indexcards/{topicId}")
@@ -179,8 +178,8 @@ public class ApiController {
 
     @PostMapping("/indexcards")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> deleteSelectedIndexCards(@Valid @RequestBody() List<IndexCardRequest> indexCardRequestList) {
-        indexCardService.deleteIndexCard(indexCardRequestList);
+    public ResponseEntity<Void> deleteSelectedIndexCards(@Valid @RequestBody() List<IndexCardResponse> indexCardResList) {
+        indexCardService.deleteIndexCard(indexCardResList);
         return ResponseEntity.ok().build();
     }
 

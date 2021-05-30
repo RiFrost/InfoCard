@@ -14,6 +14,8 @@ public class TopicResponse {
 
     private int indexCardCount;
 
+    public TopicResponse(){};
+
     public TopicResponse(long topicId, String topicName, int indexCardCount) {
         this.id = topicId;
         this.topicName = topicName;

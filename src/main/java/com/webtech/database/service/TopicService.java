@@ -5,8 +5,8 @@ import com.webtech.database.repository.GroupedTopics;
 import com.webtech.database.repository.TopicRepository;
 import com.webtech.database.repository.UserRepository;
 import com.webtech.exceptions.NotFoundException;
-import com.webtech.infocard.TopicRequest;
 import com.webtech.infocard.TopicResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +29,8 @@ public class TopicService {
         return topicRepo.findById(topicId).orElseThrow(() -> new NotFoundException("TopicId " + topicId + " does not exist!"));
     }
 
-    public TopicResponse addTopic(String userId, TopicRequest topicRequest) {
-        Topic newTopic = new Topic(userService.findById(userId), topicRequest.getTopicName());
+    public TopicResponse addTopic(String userId, TopicResponse topicResponse) {
+        Topic newTopic = new Topic(userService.findById(userId), topicResponse.getTopicName());
         topicRepo.save(newTopic);
         return new TopicResponse(newTopic.getId(), newTopic.getTopicName(), 0);
     }
@@ -42,19 +42,19 @@ public class TopicService {
                 .collect(Collectors.toList());
     }
     
-    public void deleteTopics(List<TopicRequest> requestTopicList) {
-        for (TopicRequest topicR : requestTopicList) {
+    public void deleteTopics(List<TopicResponse> topicResList) {
+        for (TopicResponse topicR : topicResList) {
             if (topicRepo.existsById(topicR.getId())) {
                 topicRepo.delete(findTopicById(topicR.getId()));
             }
         }
     }
 
-    public TopicRequest renameTopic(TopicRequest topicRequest) {
-        Topic topic = findTopicById(topicRequest.getId());
-        topic.setTopicName(topicRequest.getTopicName());
+    public TopicResponse renameTopic(TopicResponse topicResponse) {
+        Topic topic = findTopicById(topicResponse.getId());
+        topic.setTopicName(topicResponse.getTopicName());
         topicRepo.save(topic);
-        return (TopicRequest) topicRequest;
+        return topicResponse;
     }
 
 }

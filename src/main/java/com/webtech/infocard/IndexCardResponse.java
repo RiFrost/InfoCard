@@ -16,6 +16,8 @@ public class IndexCardResponse {
     @NotBlank(message = "Antwortfeld darf nicht leer sein!")
     private String answer;
 
+    public IndexCardResponse() {};
+
     public IndexCardResponse(long topicId, String question, String answer) {
         id = topicId;
         this.question = question;

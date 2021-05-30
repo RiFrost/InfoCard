@@ -3,14 +3,11 @@ package com.webtech.database.service;
 import com.webtech.database.model.IndexCard;
 import com.webtech.database.repository.IndexCardRepository;
 import com.webtech.exceptions.NotFoundException;
-import com.webtech.infocard.IndexCardRequest;
 import com.webtech.infocard.IndexCardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,8 +37,8 @@ public class IndexCardService {
         .collect(Collectors.toList());
     }
 
-    public void deleteIndexCard(List<IndexCardRequest> indexCardRequestList) {
-        for (IndexCardRequest cardR : indexCardRequestList) {
+    public void deleteIndexCard(List<IndexCardResponse> indexCardResList) {
+        for (IndexCardResponse cardR : indexCardResList) {
             if (indexCardRepo.existsById(cardR.getId())) {
                 indexCardRepo.delete(findIndexCardById(cardR.getId()));
             }
