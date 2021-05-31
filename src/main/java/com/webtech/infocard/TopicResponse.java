@@ -12,9 +12,14 @@ public class TopicResponse {
     @NotBlank(message = "Themenbezeichnung darf nicht leer sein!")
     private String topicName;
 
-    public TopicResponse(long topicId, String topicName) {
-        id = topicId;
+    private int indexCardCount;
+
+    public TopicResponse(){};
+
+    public TopicResponse(long topicId, String topicName, int indexCardCount) {
+        this.id = topicId;
         this.topicName = topicName;
+        this.indexCardCount = indexCardCount;
     }
 
     public long getId() {
@@ -32,4 +37,14 @@ public class TopicResponse {
     public void setTopicName(String topicName) {
         this.topicName = topicName;
     }
+
+    public int getIndexCardCount() {
+        return this.indexCardCount;
+    }
+
+    public void setIndexCardCount(int indexCardCount) {
+        this.indexCardCount = indexCardCount;
+    }
+
+
 }
