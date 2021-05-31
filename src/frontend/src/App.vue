@@ -1,21 +1,22 @@
 <template>
-  <div>
-    <!--<my-header></my-header>-->
-    <Header_new></Header_new>
+  <div class="app">
+    <Header></Header>
     <router-view />
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import { onBeforeMount } from "vue";
 import { useStore } from "vuex";
-//import Header from "./components/Header";
-import Header_new from "./components/Header_new.vue";
+import Header from "./components/Header";
+import Footer from "@/components/Footer.vue";
 
 export default {
   components: {
     //"my-header": Header,
-    Header_new
+    Header,
+    Footer
   },
 
   setup() {
@@ -28,7 +29,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 body {
   padding: 0;
   margin: 0;
