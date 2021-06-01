@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <Header></Header>
-    <router-view />
+    <router-view class="main-content" />
     <Footer></Footer>
   </div>
 </template>
@@ -30,10 +30,26 @@ export default {
 </script>
 
 <style lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
 body {
   padding: 0;
   margin: 0;
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-family: "Roboto", sans-serif;
   background-color: #e3ecf8;
+
+  #app {
+    .app {
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100vh;
+
+      .main-content {
+        margin-bottom: auto;
+      }
+    }
+  }
 }
 </style>
