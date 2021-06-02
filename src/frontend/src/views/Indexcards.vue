@@ -1,5 +1,5 @@
 <template>
-	<el-main style="width: 80%; margin: auto">
+	<el-main style="width: 80%; margin: auto;">
 		<el-menu
 			class="el-menu-demo"
 			mode="horizontal"
@@ -9,7 +9,7 @@
 			<el-menu-item
 				class="add-indexcard"
 				index="3"
-				label="openPopup"
+				label="buttonTrigger"
 				style="border-bottom: none;"
 			>
 				<el-tooltip
@@ -19,7 +19,7 @@
 					placement="bottom"
 				>
 					<fa
-						@click="openPopup.buttontriggerNewCard = true"
+						@click="buttonTrigger.NewCard = true"
 						icon="plus-square"
 						size="3x"
 						position="bottom-right"
@@ -45,247 +45,212 @@
 					</el-tooltip>
 				</router-link>
 			</el-menu-item>
-			<el-menu-item class="headline" index="1" label="Topics" disabled>
-				Deine Übersicht
+			<el-menu-item class="headline" index="1" label="IndexCard" disabled>
+				Karteikarten zum Thema:
+				{{ topic.topicName }}
 			</el-menu-item>
 		</el-menu>
-		<el-scrollbar max-height="550px">
-			<el-table
-				:data="indexCards"
-				:show-header="false"
-				style="width: 100%; text-align: center;"
+		<div class="grid-container">
+			<div
+				class="inner-grid"
+				v-for="(indexCard, index) in indexCards"
+				v-bind:key="index"
 			>
-				<el-table-column
-					style="display: flex;justify-content: center; text-align: center;"
-				>
-					<template #default="scope">
-						<div class="position-box-card">
-							<el-card class="box-card">
-								<template #header>
-									<div class="card-header">
-										Frage:
-										<el-tooltip
-											class="item"
-											effect="dark"
-											content="bearbeiten"
-											placement="bottom"
-										>
-											<fa
-												icon="pen"
-												size="2x"
-												@click="
-													openDialog(scope.$index, scope.row, 'renameQuestion')
-												"
-												>Edit</fa
-											>
-										</el-tooltip>
-									</div>
-
-									<div
-										class="text-question-answer"
-										v-if="!openPopup.buttontriggerRenameQuestion"
-									>
-										<p>{{ scope.row.question }}</p>
-									</div>
-									<div>
-										<el-form
-											v-if="openPopup.buttontriggerRenameQuestion"
-											:model="formRenameCard"
-											ref="formEl"
-											:rules="ruleRenameQuestion"
-											:status-icon="true"
-											label-width="120px"
-											label-position="top"
-										>
-											<el-form-item prop="question">
-												<el-input
-													v-model="formRenameCard.question"
-													:autosize="{ minRows: 2 }"
-													maxlength="100"
-													show-word-limit
-												></el-input
-											></el-form-item>
-											<el-form-item align="center">
-												<div class="button-arrange">
-													<el-button
-														type="success"
-														icon="el-icon-check"
-														@click="
-															submitNewNameCard(
-																formRenameCard.question,
-																scope.row.answer
-															)
-														"
-														circle
-													></el-button>
-													<el-button
-														type="danger"
-														icon="el-icon-close"
-														@click="resetForm()"
-														circle
-													></el-button>
-												</div>
-											</el-form-item>
-										</el-form>
-									</div>
-								</template>
-
-								<div class="card-header">
-									Antwort:
-									<el-tooltip
-										class="item"
-										effect="dark"
-										content="bearbeiten"
-										placement="bottom"
-									>
-										<fa
-											icon="pen"
-											size="2x"
-											@click="
-												openDialog(scope.$index, scope.row, 'renameAnswer')
-											"
-											>Edit</fa
-										>
-									</el-tooltip>
-								</div>
-
-								<div
-									class="text-question-answer"
-									v-if="!openPopup.buttontriggerRenameAnswer"
+				<el-card class="box-card">
+					<template #header>
+						<div class="card-header">
+							Frage:
+							<el-tooltip
+								class="item"
+								effect="dark"
+								content="bearbeiten"
+								placement="bottom"
+							>
+								<fa
+									icon="pen"
+									size="2x"
+									@click="openDialog(index, 'renameQuestion')"
 								>
-									<p class="pre-formatted">{{ scope.row.answer }}</p>
-								</div>
-								<div>
-									<el-form
-										v-if="openPopup.buttontriggerRenameAnswer"
-										:model="formRenameCard"
-										ref="formEl"
-										:rules="ruleRenameAnswer"
-										:status-icon="true"
-										label-width="120px"
-										label-position="top"
-									>
-										<el-form-item prop="answer">
-											<el-input
-												type="textarea"
-												v-model="formRenameCard.answer"
-												maxlength="400"
-												:autosize="{ minRows: 4, maxRows: 6 }"
-												show-word-limit
-											></el-input
-										></el-form-item>
-										<el-form-item align="center">
-											<div class="button-arrange">
-												<el-button
-													type="success"
-													icon="el-icon-check"
-													@click="
-														submitNewNameCard(
-															scope.row.question,
-															formRenameCard.answer
-														)
-													"
-													circle
-												></el-button>
-
-												<el-button
-													type="danger"
-													icon="el-icon-close"
-													@click="resetForm()"
-													circle
-												></el-button>
-											</div>
-										</el-form-item>
-									</el-form>
-								</div>
-								<div class="card-footer">
-									<el-tooltip
-										class="item"
-										effect="dark"
-										content="merken"
-										placement="bottom"
-										><div class="favorite-icon">
-											<i
-												class="el-icon-star-off"
-												v-if="!openPopup.buttontriggerAddFavorite"
-												@click="addToFavorites(scope.$index, scope.row)"
-											></i>
-
-											<i
-												class="el-icon-star-on"
-												v-if="openPopup.buttontriggerAddFavorite"
-												@click="openPopup.buttontriggerAddFavorite = false"
-											></i></div
-									></el-tooltip>
-
-									<el-tooltip
-										class="item"
-										effect="dark"
-										content="löschen"
-										placement="bottom"
-									>
-										<fa
-											icon="trash-alt"
-											size="2x"
-											@click="openDialog(scope.$index, scope.row, 'delete')"
-											>Delete</fa
-										>
-									</el-tooltip>
-								</div>
-							</el-card>
+									Edit
+								</fa>
+								>
+							</el-tooltip>
 						</div>
-
-						<!-- <div class="test">
-							<el-card class="box-card">
-								<template #header>
-									<div class="card-header">
-										<span>{{ scope.row.question + 1 }}</span>
-										<el-button class="button" type="text"
-											>Operation button</el-button
-										>
+						<div
+							class="text-question-answer"
+							v-if="
+								!(
+									buttonTrigger.renameQuestion &&
+									card.indexCard.id == indexCard.id
+								)
+							"
+						>
+							<p>{{ indexCard.question }}</p>
+						</div>
+						<div>
+							<el-form
+								v-if="
+									buttonTrigger.renameQuestion &
+										(card.indexCard.id == indexCard.id)
+								"
+								:model="formRenameCard"
+								ref="formCheck"
+								:rules="rulesRenameQuestion"
+								:status-icon="true"
+								label-width="120px"
+								label-position="top"
+							>
+								<el-form-item prop="question">
+									<el-input
+										v-model="formRenameCard.question"
+										:autosize="{ minRows: 2 }"
+										maxlength="100"
+										show-word-limit
+									></el-input
+								></el-form-item>
+								<el-form-item align="center">
+									<div class="button-arrange">
+										<el-button
+											type="success"
+											icon="el-icon-check"
+											@click="submitRenaming()"
+											circle
+										></el-button>
+										<el-button
+											type="danger"
+											icon="el-icon-close"
+											@click="resetForm()"
+											circle
+										></el-button>
 									</div>
-								</template>
-								<div v-for="o in 4" :key="o" class="text item">
-									{{ "List item " + o }}
-								</div>
-							</el-card>
-						</div> -->
-					</template>
-				</el-table-column>
-				<!-- <el-table-column prop="name" label="Name">
-					<template #default="scope">
-						<div class="test">
-							<el-card class="box-card">
-								<template #header>
-									<div class="card-header">
-										<span>{{ scope.row.question }}</span>
-										<el-button class="button" type="text"
-											>Operation button</el-button
-										>
-									</div>
-								</template>
-								<div v-for="o in 4" :key="o" class="text item">
-									{{ "List item " + o }}
-								</div>
-							</el-card>
+								</el-form-item>
+							</el-form>
 						</div>
 					</template>
-				</el-table-column> -->
-			</el-table>
-		</el-scrollbar>
+					<div class="card-header">
+						Antwort:
+						<el-tooltip
+							class="item"
+							effect="dark"
+							content="bearbeiten"
+							placement="bottom"
+						>
+							<fa
+								icon="pen"
+								size="2x"
+								@click="openDialog(index, 'renameAnswer')"
+							>
+								Edit
+							</fa>
+							>
+						</el-tooltip>
+					</div>
+					<div
+						class="text-question-answer"
+						v-if="
+							!(buttonTrigger.renameAnswer && card.indexCard.id == indexCard.id)
+						"
+					>
+						<p class="pre-formatted">{{ indexCard.answer }}</p>
+					</div>
+					<div>
+						<el-form
+							v-if="
+								buttonTrigger.renameAnswer && card.indexCard.id == indexCard.id
+							"
+							:model="formRenameCard"
+							ref="formCheck"
+							:rules="rulesRenameAnswer"
+							:status-icon="true"
+							label-width="120px"
+							label-position="top"
+						>
+							<el-form-item prop="answer">
+								<el-input
+									type="textarea"
+									v-model="formRenameCard.answer"
+									maxlength="400"
+									:autosize="{ minRows: 4, maxRows: 6 }"
+									show-word-limit
+								></el-input
+							></el-form-item>
+							<el-form-item align="center">
+								<div class="button-arrange">
+									<el-button
+										type="success"
+										icon="el-icon-check"
+										@click="submitRenaming()"
+										circle
+									></el-button>
+									<el-button
+										type="danger"
+										icon="el-icon-close"
+										@click="resetForm()"
+										circle
+									></el-button>
+								</div>
+							</el-form-item>
+						</el-form>
+					</div>
+					<div class="card-footer">
+						<div class="favorite-icon">
+							<el-tooltip
+								v-if="!buttonTrigger.addFavorite"
+								class="item"
+								effect="dark"
+								content="merken"
+								placement="bottom"
+							>
+								<i
+									class="el-icon-star-off"
+									v-if="!buttonTrigger.addFavorite"
+									@click="addToFavorites(index)"
+								></i>
+							</el-tooltip>
+							<el-tooltip
+								v-if="buttonTrigger.addFavorite"
+								class="item"
+								effect="dark"
+								content="nicht mehr merken"
+								placement="bottom"
+							>
+								<i
+									class="el-icon-star-on"
+									v-if="buttonTrigger.addFavorite"
+									@click="buttonTrigger.addFavorite = false"
+								></i>
+							</el-tooltip>
+						</div>
+						<el-popconfirm
+							cancelButtonText="Nein"
+							confirmButtonText="Ja"
+							icon="el-icon-info"
+							iconColor="red"
+							title="Wirklich Thema und Karteikarten löschen?"
+							@confirm="submitDelete(index)"
+						>
+							<template #reference>
+								<fa icon="trash-alt" size="2x"></fa>
+							</template>
+						</el-popconfirm>
+					</div>
+				</el-card>
+			</div>
+		</div>
 
+		<!-- Popup for adding new index cards  -->
 		<el-dialog
-			v-if="openPopup.buttontriggerNewCard"
+			v-if="buttonTrigger.NewCard"
 			title="Neue Karteikarte anlegen"
-			v-model="openPopup.buttontriggerNewCard"
-			width="50%"
+			v-model="buttonTrigger.NewCard"
+			width="40%"
 			:show-close="false"
 			:close-on-click-modal="false"
 			style="font-weight: bold;"
 		>
 			<el-form
 				:model="formNewCard"
-				ref="formEl"
+				ref="formCheck"
 				:rules="rulesNewCard"
 				:status-icon="true"
 				label-width="120px"
@@ -301,7 +266,6 @@
 						show-word-limit
 					></el-input
 				></el-form-item>
-
 				<el-form-item prop="answer">
 					<div class="header-answer-question">Antwort:</div>
 					<el-input
@@ -313,33 +277,13 @@
 					>
 					</el-input>
 				</el-form-item>
-
 				<el-form-item align="center">
-					<el-button type="primary" @click="submitNewIndexCard()"
+					<el-button type="primary" @click="submitAdding()"
 						>Bestätigen</el-button
 					>
 					<el-button @click="resetForm()">Abbrechen</el-button>
 				</el-form-item>
 			</el-form>
-		</el-dialog>
-
-		<el-dialog
-			v-if="openPopup.buttontriggerDeleteCard"
-			title="Karteikarte wirklich löschen?"
-			v-model="openPopup.buttontriggerDeleteCard"
-			width="30%"
-			:show-close="false"
-			:close-on-click-modal="false"
-			center
-		>
-			<div style="text-align: center">
-				<el-button type="primary" @click="submitDeleteIndexCard()" center
-					>Bestätigen</el-button
-				>
-				<el-button @click="openPopup.buttontriggerDeleteCard = false" center
-					>Abbrechen</el-button
-				>
-			</div>
 		</el-dialog>
 	</el-main>
 </template>
@@ -360,7 +304,18 @@ export default {
 
 	setup() {
 		const store = useStore();
+		const route = useRoute();
 		const user = store.state.user.user;
+		const topic = store.state.topic.topic;
+		const indexCards = ref([]);
+		const card = ref({
+			index: {},
+			indexCard: {
+				id: 0,
+				question: "",
+				answer: ""
+			}
+		});
 
 		const config = {
 			headers: {
@@ -368,23 +323,7 @@ export default {
 			}
 		};
 
-		const indexCards = ref([]);
-		const route = useRoute();
-		const topicId = route.params.id;
-
-		const openPopup = ref({
-			buttontriggerNewCard: false,
-			buttontriggerRenameQuestion: false,
-			buttontriggerRenameAnswer: false,
-			buttontriggerDeleteCard: false
-		});
-
-		const dialog = reactive({
-			index: "",
-			row: ""
-		});
-
-		const formEl = ref();
+		const formCheck = ref();
 		const formNewCard = reactive({
 			question: "",
 			answer: ""
@@ -393,6 +332,13 @@ export default {
 		const formRenameCard = reactive({
 			question: "",
 			answer: ""
+		});
+
+		const buttonTrigger = ref({
+			NewCard: false,
+			renameQuestion: false,
+			renameAnswer: false,
+			deleteCard: false
 		});
 
 		const rulesNewCard = {
@@ -412,7 +358,7 @@ export default {
 			]
 		};
 
-		const ruleRenameQuestion = {
+		const rulesRenameQuestion = {
 			question: {
 				required: true,
 				message: "Bitte gib eine Frage ein",
@@ -420,7 +366,7 @@ export default {
 			}
 		};
 
-		const ruleRenameAnswer = {
+		const rulesRenameAnswer = {
 			answer: {
 				required: true,
 				message: "Bitte gib eine Antwort ein",
@@ -428,64 +374,54 @@ export default {
 			}
 		};
 
-		function openDialog(index, row, specificPopup) {
-			dialog.index = index;
-			dialog.row = row;
-			formRenameCard.question = dialog.row.question;
-			formRenameCard.answer = dialog.row.answer;
-
+		function openDialog(index, specificPopup) {
+			card.value.index = index;
+			card.value.indexCard = indexCards.value[index];
+			console.log(card.value);
 			if (specificPopup == "delete") {
-				openPopup.value.buttontriggerDeleteCard = true;
+				buttonTrigger.value.deleteCard = true;
 			} else if (specificPopup == "renameQuestion") {
-				openPopup.value.buttontriggerRenameQuestion = true;
+				buttonTrigger.value.renameQuestion = true;
+				formRenameCard.question = card.value.indexCard.question;
 			} else if (specificPopup == "renameAnswer") {
-				openPopup.value.buttontriggerRenameAnswer = true;
+				buttonTrigger.value.renameAnswer = true;
+				formRenameCard.answer = card.value.indexCard.answer;
 			}
 		}
 
-		function addToFavorites(index, row) {
-			console.log("hier");
-			dialog.index = index;
-			dialog.row = row;
-			openPopup.value.buttontriggerAddFavorite = true;
+		// für spätere Funktion
+		function addToFavorites(indexCard) {
+			card.value = indexCard;
+			buttonTrigger.value.addFavorite = true;
 		}
 
 		function resetForm() {
-			formEl.value.resetFields();
-			openPopup.value.buttontriggerNewCard = false;
-			openPopup.value.buttontriggerRenameQuestion = false;
-			openPopup.value.buttontriggerRenameAnswer = false;
-			openPopup.value.buttontriggerAddFavorite = false;
+			formCheck.value.resetFields();
+			buttonTrigger.value.NewCard = false;
+			buttonTrigger.value.renameQuestion = false;
+			buttonTrigger.value.renameAnswer = false;
+			buttonTrigger.value.addFavorite = false;
 		}
 
-		function removeObjOfArray(arr, index) {
-			var removeIndex = arr.value
-				.map(function(item) {
-					return item.id;
-				})
-				.indexOf(index);
-			arr.value.splice(removeIndex, 1);
+		function removeObjOfArray(index) {
+			console.log("inside delete method");
+			indexCards.value.splice(index, 1);
 		}
 
-		async function loadIndexCards() {
-			console.log("load index cards");
-			try {
-				let response = await axios.get(`${API}/indexcards/${topicId}`, config);
-				console.log(response.data);
-				console.log("index cards loaded");
-				indexCards.value = response.data;
-				console.log(indexCards.value);
-			} catch (e) {
-				console.error(e);
+		function renameCard() {
+			if (formRenameCard.answer === "") {
+				indexCards.value[card.value.index].question = formRenameCard.question;
+			} else {
+				indexCards.value[card.value.index].answer = formRenameCard.answer;
 			}
 		}
 
-		async function addNewTopic(question, answer) {
+		async function addNewIndexCard(question, answer) {
 			let payload = { id: null, question: question, answer: answer };
 			console.log(payload);
 			try {
 				let response = await axios.post(
-					`${API}/indexcards/${topicId}`,
+					`${API}/indexcards/${topic.id}`,
 					payload,
 					config
 				);
@@ -497,59 +433,54 @@ export default {
 			}
 		}
 
-		function submitNewIndexCard() {
+		function submitAdding() {
 			console.log("inside submit");
 			console.log(formNewCard.question, formNewCard.question);
-			formEl.value.validate((valid) => {
+			formCheck.value.validate((valid) => {
 				if (valid) {
-					addNewTopic(formNewCard.question, formNewCard.answer).then(() => {
+					addNewIndexCard(formNewCard.question, formNewCard.answer).then(() => {
 						resetForm();
 					});
 				}
 			});
 		}
 
-		async function submitDeleteIndexCard() {
-			console.log("deletes index card");
-			console.log(dialog.row.id);
-
-			let payload = [
-				{
-					id: dialog.row.id,
-					question: dialog.row.question,
-					answer: dialog.row.answer
-				}
-			];
+		async function submitDelete(index) {
+			console.log("inside submitDelete");
+			let payload = [indexCards.value[index].id];
 			console.log(payload);
 			try {
 				let response = await axios.post(`${API}/indexcards`, payload, config);
-				if (response.status === 200) {
-					removeObjOfArray(indexCards, dialog.row.id);
+				console.log(response.data.ok);
+				if (response.status.valueOf(200)) {
+					console.log(response.data);
+					removeObjOfArray(index);
 					console.log("index card is deleted");
 				}
 			} catch (e) {
 				console.error(e);
 			}
-			openPopup.value.buttontriggerDeleteCard = false;
+			buttonTrigger.value.deleteCard = false;
 		}
 
-		function renameCard(index, question, answer) {
-			var objIndex = indexCards.value.findIndex((obj) => obj.id == index);
-			indexCards.value[objIndex].question = question;
-			indexCards.value[objIndex].answer = answer;
-		}
-
-		async function getRenamedCard(question, answer) {
+		async function getRenamedCard() {
 			let payload = {
-				id: dialog.row.id,
-				question: question,
-				answer: answer
+				id: card.value.indexCard.id,
+				question: "",
+				answer: ""
 			};
+			if (formRenameCard.question === "") {
+				payload.question = card.value.indexCard.question;
+				payload.answer = formRenameCard.answer;
+			} else {
+				payload.question = formRenameCard.question;
+				payload.answer = card.value.indexCard.answer;
+			}
 			console.log(payload);
 			try {
 				let response = await axios.put(`${API}/indexcards`, payload, config);
-				if (response.status === 200) {
-					renameCard(dialog.row.id, question, answer);
+				if (response.status.valueOf(200)) {
+					renameCard();
 					console.log("index card name has changed");
 				}
 			} catch (e) {
@@ -557,37 +488,49 @@ export default {
 			}
 		}
 
-		function submitNewNameCard(question, answer) {
-			console.log("inside submit");
-			console.log(question);
-			formEl.value.validate((valid) => {
+		function submitRenaming() {
+			console.log("inside submitNewName");
+			formCheck.value.validate((valid) => {
 				if (valid) {
-					getRenamedCard(question, answer).then(() => {
+					getRenamedCard().then(() => {
 						resetForm();
 					});
 				}
 			});
 		}
-
 		onBeforeMount(() => {
-			return loadIndexCards();
+			store.dispatch("topic/setTopic", {
+				id: route.params.id,
+				topicName: route.params.topicName
+			});
+			store
+				.dispatch("topic/loadIndexCards", {
+					config: config
+				})
+				.then(() => {
+					indexCards.value = store.getters["topic/getIndexCards"];
+					console.log(indexCards.value);
+					console.log(topic);
+				});
 		});
 
 		return {
 			indexCards,
 			openDialog,
-			openPopup,
-			submitDeleteIndexCard,
-			formEl,
+			buttonTrigger,
+			submitDelete,
+			formCheck,
 			formNewCard,
 			rulesNewCard,
-			submitNewIndexCard,
-			submitNewNameCard,
+			submitAdding,
+			submitRenaming,
 			formRenameCard,
-			ruleRenameQuestion,
-			ruleRenameAnswer,
+			rulesRenameQuestion,
+			rulesRenameAnswer,
 			resetForm,
-			addToFavorites
+			addToFavorites,
+			topic,
+			card
 		};
 	}
 };
@@ -598,17 +541,14 @@ $icon-color: #1d2231;
 $icon-hover: pointer;
 $icon-opacity: 0.7;
 $icon-size: 1.5rem;
-
 .el-main {
 	padding: 0;
 	-webkit-box-shadow: 4px 5px 15px 5px rgba(0, 0, 0, 0.09);
 	box-shadow: 4px 5px 15px 5px rgba(0, 0, 0, 0.09);
 }
-
 .el-menu-item {
 	font-size: unset;
 }
-
 .el-menu-item.is-disabled.headline {
 	float: left;
 	font-size: 22px;
@@ -616,7 +556,6 @@ $icon-size: 1.5rem;
 	cursor: context-menu;
 	opacity: 1;
 }
-
 .el-menu-item.add-indexcard {
 	float: right;
 	top: 50%;
@@ -627,7 +566,6 @@ $icon-size: 1.5rem;
 		}
 	}
 }
-
 .el-menu-item.go-back {
 	float: right;
 	top: 50%;
@@ -638,13 +576,11 @@ $icon-size: 1.5rem;
 		}
 	}
 }
-
 .el-table {
 	font-size: unset;
 }
-
-.el-icon-star-on:before,
-.el-icon-star-off:before,
+.el-icon-star-off,
+.el-icon-star-on,
 .fa-pen,
 .fa-trash-alt {
 	font-size: $icon-size;
@@ -654,7 +590,6 @@ $icon-size: 1.5rem;
 		cursor: $icon-hover;
 	}
 }
-
 .header-answer-question {
 	display: flex;
 	justify-content: space-between;
@@ -662,12 +597,10 @@ $icon-size: 1.5rem;
 	font-size: 18px;
 	font-weight: bold;
 }
-
 .position-box-card {
 	display: flex;
 	justify-content: center;
 }
-
 .card-header {
 	display: flex;
 	justify-content: space-between;
@@ -675,13 +608,11 @@ $icon-size: 1.5rem;
 	font-size: 18px;
 	font-weight: bold;
 }
-
 .el-card__body {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
-
 .card-footer {
 	display: flex;
 	justify-content: flex-end;
@@ -689,28 +620,22 @@ $icon-size: 1.5rem;
 		padding-right: 10px;
 	}
 }
-
 .text {
 	font-size: 16px;
 }
-
 .text-question-answer {
 	word-break: normal;
 }
-
 .box-card {
 	width: 480px;
 }
-
 .pre-formatted {
 	white-space: pre-wrap;
 }
-
 .button-arrange {
 	display: flex;
 	justify-content: space-between;
 }
-
 .go-back-button {
 	background-color: #1d2231;
 	color: #dfdfdf;
@@ -719,9 +644,29 @@ $icon-size: 1.5rem;
 		opacity: $icon-opacity;
 	}
 }
-
 .el-button--default.go-back-button.item {
 	background-color: #1d2231;
 	color: #dfdfdf;
+}
+
+.el-card {
+	height: 100%;
+}
+
+.grid-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.inner-grid {
+	flex: 0 0 calc(33.33% - 20px);
+
+	padding: 20px;
+	margin: 10px;
+}
+
+* {
+	box-sizing: border-box;
 }
 </style>
