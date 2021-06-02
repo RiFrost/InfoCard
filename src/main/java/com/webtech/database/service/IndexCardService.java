@@ -37,10 +37,10 @@ public class IndexCardService {
         .collect(Collectors.toList());
     }
 
-    public void deleteIndexCard(List<IndexCardResponse> indexCardResList) {
-        for (IndexCardResponse cardR : indexCardResList) {
-            if (indexCardRepo.existsById(cardR.getId())) {
-                indexCardRepo.delete(findIndexCardById(cardR.getId()));
+    public void deleteIndexCard(List<Long> indexCardIdList) {
+        for (long cardId : indexCardIdList) {
+            if (indexCardRepo.existsById(cardId)) {
+                indexCardRepo.delete(findIndexCardById(cardId));
             }
         }
     }
