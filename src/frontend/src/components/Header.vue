@@ -31,7 +31,10 @@
       </div>
       <div v-if="isAuthenticated">
         <el-dropdown trigger="click">
-          <el-avatar class="user-icon" icon="el-icon-user-solid"></el-avatar>
+          <span class="user-name"
+            >{{ user.firstname }} {{ user.lastname
+            }}<el-avatar class="user-icon" icon="el-icon-user-solid"></el-avatar
+          ></span>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item
@@ -56,23 +59,28 @@
 </template>
 
 <script>
-import { computed, onUpdated, ref } from "vue";
+import { computed, onMounted, onUpdated, ref } from "vue";
 import { useRouter } from "vue-router";
 import store from "../store";
 export default {
   setup() {
     const router = useRouter();
     const isAuthenticated = ref();
+    const user = ref(store.state.user.user);
 
     onUpdated(() => {
       isAuthenticated.value = store.getters["user/isAuthenticated"];
+      user.value = store.state.user.user;
+    });
+
+    onMounted(() => {
+      store.dispatch("user/updateUser");
     });
 
     function logout() {
       store.dispatch("user/logout");
     }
 
-    // TODO Rethink
     const activeIndex = computed(() => {
       return router.currentRoute.value.path;
     });
@@ -85,7 +93,8 @@ export default {
       activeIndex,
       pushRoute,
       isAuthenticated,
-      logout
+      logout,
+      user
     };
   }
 };
@@ -145,8 +154,15 @@ export default {
     display: flex;
     flex-direction: row-reverse;
 
-    .user-icon {
+    .user-name {
+      color: rgb(223, 223, 223);
+      display: flex;
+      align-items: center;
       cursor: pointer;
+
+      .user-icon {
+        margin: auto 0 auto 1rem;
+      }
     }
   }
 }
