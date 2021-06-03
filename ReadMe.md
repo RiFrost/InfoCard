@@ -9,7 +9,7 @@
   </a>
 
   <a href="https://github.com/RiFrost/InfoCard/releases" target="_blank">
-    <img alt="GitHub release" src="https://img.shields.io/badge/last_commit-mai-lightgreen.svg?style=plastic">
+    <img alt="GitHub release" src="https://img.shields.io/badge/last_commit-june-lightgreen.svg?style=plastic">
   </a>
 
   <a href="https://github.com/RiFrost/InfoCard/releases" target="_blank">
