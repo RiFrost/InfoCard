@@ -153,8 +153,8 @@ public class ApiController {
 
     @PostMapping("/topics")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> deleteSelectedTopics(@Valid @RequestBody List<TopicResponse> TopicResList) {
-        topicService.deleteTopics(TopicResList);
+    public ResponseEntity<Void> deleteSelectedTopics(@Valid @RequestBody List<Long> TopicIdList) {
+        topicService.deleteTopics(TopicIdList);
         return ResponseEntity.ok().build();
     }
 
@@ -178,8 +178,8 @@ public class ApiController {
 
     @PostMapping("/indexcards")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> deleteSelectedIndexCards(@Valid @RequestBody() List<IndexCardResponse> indexCardResList) {
-        indexCardService.deleteIndexCard(indexCardResList);
+    public ResponseEntity<Void> deleteSelectedIndexCards(@Valid @RequestBody() List<Long> indexCardIdList) {
+        indexCardService.deleteIndexCard(indexCardIdList);
         return ResponseEntity.ok().build();
     }
 
