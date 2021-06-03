@@ -42,10 +42,10 @@ public class TopicService {
                 .collect(Collectors.toList());
     }
     
-    public void deleteTopics(List<TopicResponse> topicResList) {
-        for (TopicResponse topicR : topicResList) {
-            if (topicRepo.existsById(topicR.getId())) {
-                topicRepo.delete(findTopicById(topicR.getId()));
+    public void deleteTopics(List<Long> topicIdList) {
+        for (Long topId : topicIdList) {
+            if (topicRepo.existsById(topId)) {
+                topicRepo.delete(findTopicById(topId));
             }
         }
     }
