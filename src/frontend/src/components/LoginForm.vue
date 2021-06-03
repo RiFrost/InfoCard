@@ -1,6 +1,5 @@
 <template>
   <div class="main">
-    <div class="main-header"></div>
     <div class="main-content">
       <el-form
         :model="form"
@@ -11,7 +10,6 @@
         @keyup.enter="submitForm()"
       >
         <img src="../assets/logo.png" />
-        <h2>Login</h2>
         <el-form-item label="E-Mail" prop="email">
           <el-input v-model="form.email"></el-input>
         </el-form-item>
@@ -76,11 +74,6 @@ export default {
   display: flex;
   width: 100%;
   flex-direction: column;
-
-  .main-header {
-    width: auto;
-    height: 5.5rem;
-  }
 
   .main-content {
     display: flex;

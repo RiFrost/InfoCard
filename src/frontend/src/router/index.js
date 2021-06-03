@@ -7,6 +7,7 @@ import Topics from "@/views/Topics.vue";
 import Indexcards from "@/views/Indexcards.vue";
 import About from "@/views/About.vue";
 import Contact from "@/views/Contact.vue";
+import Profile from "@/views/Profile.vue";
 
 const routes = [
   {
@@ -49,6 +50,14 @@ const routes = [
     path: "/contact",
     name: "Contact",
     component: Contact
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+    meta: {
+      requieresLogin: true
+    }
   }
 ];
 
