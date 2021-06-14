@@ -10,7 +10,7 @@
 				class="folder"
 				index="3"
 				label="buttonTrigger"
-				style="border-bottom: none;"
+				style="border-bottom: none"
 			>
 				<el-tooltip
 					class="item"
@@ -77,7 +77,6 @@
 					>
 						<fa
 							icon="pen"
-							size="2x"
 							@click="openDialog(scope.$index, scope.row, 'change')"
 							>Edit</fa
 						>
@@ -98,7 +97,6 @@
 							<fa
 								@mouseover="buttonTrigger.delete = true"
 								icon="trash-alt"
-								size="2x"
 							></fa>
 							<el-tooltip
 								v-if="buttonTrigger.delete"
@@ -107,7 +105,7 @@
 								content="löschen"
 								placement="bottom"
 							>
-								<fa icon="trash-alt" size="2x"> </fa
+								<fa icon="trash-alt"> </fa
 							></el-tooltip>
 						</template>
 					</el-popconfirm>
@@ -193,10 +191,6 @@ const API =
 export default {
 	topicName: "Topics",
 
-	components: {
-		//    Popup: Popup,
-	},
-
 	setup() {
 		const topics = ref([]);
 		const store = useStore();
@@ -214,6 +208,7 @@ export default {
 		};
 
 		const formCheck = ref();
+
 		const form = reactive({
 			topicName: ""
 		});
@@ -241,17 +236,11 @@ export default {
 		}
 
 		function removeTopic(index) {
-			let removeIndex = topics.value
-				.map(function(item) {
-					return item.id;
-				})
-				.indexOf(index);
-			topics.value.splice(removeIndex, 1);
+			topics.value.splice(index, 1);
 		}
 
-		function renameTopic(index, topicName) {
-			var objIndex = topics.value.findIndex((obj) => obj.id == index);
-			topics.value[objIndex].topicName = topicName;
+		function renameTopic() {
+			topics.value[dialog.index].topicName = form.topicName;
 		}
 
 		function openDialog(index, row) {
@@ -281,7 +270,7 @@ export default {
 			try {
 				let response = await axios.post(`${API}/topics`, payload, config);
 				if (response.status === 200) {
-					removeTopic(row.id);
+					removeTopic(index);
 					console.log("topic is deleted");
 				}
 			} catch (e) {
@@ -290,7 +279,7 @@ export default {
 		}
 
 		async function addTopic(topicName) {
-			let payload = { id: null, topicName: topicName };
+			let payload = { id: 0, topicName: topicName };
 			console.log(payload);
 			try {
 				let response = await axios.post(
@@ -324,7 +313,7 @@ export default {
 			try {
 				let response = await axios.put(`${API}/topics`, payload, config);
 				if (response.status === 200) {
-					renameTopic(dialog.row.id, form.topicName);
+					renameTopic();
 					console.log("Topicname has changed");
 				}
 			} catch (e) {
