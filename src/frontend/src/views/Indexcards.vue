@@ -19,10 +19,9 @@
 					placement="bottom"
 				>
 					<fa
-						@click="buttonTrigger.NewCard = true"
+						@click="buttonTrigger.newCard = true"
 						icon="plus-square"
 						size="3x"
-						position="bottom-right"
 					/>
 				</el-tooltip>
 			</el-menu-item>
@@ -50,6 +49,9 @@
 				{{ topic.topicName }}
 			</el-menu-item>
 		</el-menu>
+		<div class="empty-cards-text" v-if="indexCards.length == 0">
+			<h3>Es gibt noch keine Karteikarten</h3>
+		</div>
 		<div class="grid-container">
 			<div
 				class="inner-grid"
@@ -60,24 +62,34 @@
 					<template #header>
 						<div class="card-header">
 							Frage:
-							<el-tooltip
-								class="item"
-								effect="dark"
-								content="bearbeiten"
-								placement="bottom"
+							<div
+								v-if="
+									!buttonTrigger.renameQuestion && !buttonTrigger.renameAnswer
+								"
 							>
-								<fa
-									icon="pen"
-									size="2x"
-									@click="openDialog(index, 'renameQuestion')"
+								<el-tooltip
+									class="item"
+									effect="dark"
+									content="bearbeiten"
+									placement="bottom"
 								>
-									Edit
-								</fa>
+									<fa icon="pen" @click="openDialog(index, 'renameQuestion')">
+										Edit
+									</fa>
+								</el-tooltip>
+							</div>
+							<div
+								v-if="
+									buttonTrigger.renameQuestion || buttonTrigger.renameAnswer
+								"
+							>
+								<fa class="test" icon="pen" style="cursor: not-allowed;"
+									>Edit</fa
 								>
-							</el-tooltip>
+							</div>
 						</div>
 						<div
-							class="text-question-answer"
+							class="text-question"
 							v-if="
 								!(
 									buttonTrigger.renameQuestion &&
@@ -109,7 +121,7 @@
 									></el-input
 								></el-form-item>
 								<el-form-item align="center">
-									<div class="button-arrange">
+									<div class="form-input-button-arrange">
 										<el-button
 											type="success"
 											icon="el-icon-check"
@@ -129,29 +141,38 @@
 					</template>
 					<div class="card-header">
 						Antwort:
-						<el-tooltip
-							class="item"
-							effect="dark"
-							content="bearbeiten"
-							placement="bottom"
+						<div
+							v-if="
+								!buttonTrigger.renameQuestion && !buttonTrigger.renameAnswer
+							"
 						>
-							<fa
-								icon="pen"
-								size="2x"
-								@click="openDialog(index, 'renameAnswer')"
+							<el-tooltip
+								class="item"
+								effect="dark"
+								content="bearbeiten"
+								placement="bottom"
 							>
-								Edit
-							</fa>
-							>
-						</el-tooltip>
+								<fa icon="pen" @click="openDialog(index, 'renameAnswer')">
+									Edit
+								</fa>
+							</el-tooltip>
+						</div>
+						<div
+							class="not-clickable"
+							v-if="buttonTrigger.renameQuestion || buttonTrigger.renameAnswer"
+						>
+							<fa icon="pen" style="cursor: not-allowed;">Edit</fa>
+						</div>
 					</div>
 					<div
-						class="text-question-answer"
+						class="text-answer"
 						v-if="
 							!(buttonTrigger.renameAnswer && card.indexCard.id == indexCard.id)
 						"
 					>
-						<p class="pre-formatted">{{ indexCard.answer }}</p>
+						<el-scrollbar height="100%">
+							<p class="pre-formatted">{{ indexCard.answer }}</p></el-scrollbar
+						>
 					</div>
 					<div>
 						<el-form
@@ -175,7 +196,7 @@
 								></el-input
 							></el-form-item>
 							<el-form-item align="center">
-								<div class="button-arrange">
+								<div class="form-input-button-arrange">
 									<el-button
 										type="success"
 										icon="el-icon-check"
@@ -193,9 +214,8 @@
 						</el-form>
 					</div>
 					<div class="card-footer">
-						<div class="favorite-icon">
+						<div class="favorite-icon" v-if="!buttonTrigger.addFavorite">
 							<el-tooltip
-								v-if="!buttonTrigger.addFavorite"
 								class="item"
 								effect="dark"
 								content="merken"
@@ -203,12 +223,12 @@
 							>
 								<i
 									class="el-icon-star-off"
-									v-if="!buttonTrigger.addFavorite"
-									@click="addToFavorites(index)"
+									@click="addToFavorites(indexCard)"
 								></i>
 							</el-tooltip>
+						</div>
+						<div class="favorite-icon" v-if="buttonTrigger.addFavorite">
 							<el-tooltip
-								v-if="buttonTrigger.addFavorite"
 								class="item"
 								effect="dark"
 								content="nicht mehr merken"
@@ -216,7 +236,6 @@
 							>
 								<i
 									class="el-icon-star-on"
-									v-if="buttonTrigger.addFavorite"
 									@click="buttonTrigger.addFavorite = false"
 								></i>
 							</el-tooltip>
@@ -230,7 +249,7 @@
 							@confirm="submitDelete(index)"
 						>
 							<template #reference>
-								<fa icon="trash-alt" size="2x"></fa>
+								<fa icon="trash-alt"></fa>
 							</template>
 						</el-popconfirm>
 					</div>
@@ -240,9 +259,9 @@
 
 		<!-- Popup for adding new index cards  -->
 		<el-dialog
-			v-if="buttonTrigger.NewCard"
+			v-if="buttonTrigger.newCard"
 			title="Neue Karteikarte anlegen"
-			v-model="buttonTrigger.NewCard"
+			v-model="buttonTrigger.newCard"
 			width="40%"
 			:show-close="false"
 			:close-on-click-modal="false"
@@ -257,7 +276,7 @@
 				label-position="top"
 			>
 				<el-form-item prop="question">
-					<div class="header-answer-question">Frage:</div>
+					<div class="header-text-answer-question">Frage:</div>
 					<el-input
 						type="textarea"
 						:autosize="{ minRows: 2 }"
@@ -267,7 +286,7 @@
 					></el-input
 				></el-form-item>
 				<el-form-item prop="answer">
-					<div class="header-answer-question">Antwort:</div>
+					<div class="header-text-answer-question">Antwort:</div>
 					<el-input
 						type="textarea"
 						:autosize="{ minRows: 4, maxRows: 6 }"
@@ -324,6 +343,7 @@ export default {
 		};
 
 		const formCheck = ref();
+
 		const formNewCard = reactive({
 			question: "",
 			answer: ""
@@ -335,7 +355,7 @@ export default {
 		});
 
 		const buttonTrigger = ref({
-			NewCard: false,
+			newCard: false,
 			renameQuestion: false,
 			renameAnswer: false,
 			deleteCard: false
@@ -378,9 +398,7 @@ export default {
 			card.value.index = index;
 			card.value.indexCard = indexCards.value[index];
 			console.log(card.value);
-			if (specificPopup == "delete") {
-				buttonTrigger.value.deleteCard = true;
-			} else if (specificPopup == "renameQuestion") {
+			if (specificPopup == "renameQuestion") {
 				buttonTrigger.value.renameQuestion = true;
 				formRenameCard.question = card.value.indexCard.question;
 			} else if (specificPopup == "renameAnswer") {
@@ -391,20 +409,18 @@ export default {
 
 		// für spätere Funktion
 		function addToFavorites(indexCard) {
-			card.value = indexCard;
+			card.value.indexCard = indexCard;
 			buttonTrigger.value.addFavorite = true;
 		}
 
 		function resetForm() {
 			formCheck.value.resetFields();
-			buttonTrigger.value.NewCard = false;
+			buttonTrigger.value.newCard = false;
 			buttonTrigger.value.renameQuestion = false;
 			buttonTrigger.value.renameAnswer = false;
-			buttonTrigger.value.addFavorite = false;
 		}
 
 		function removeObjOfArray(index) {
-			console.log("inside delete method");
 			indexCards.value.splice(index, 1);
 		}
 
@@ -417,7 +433,7 @@ export default {
 		}
 
 		async function addNewIndexCard(question, answer) {
-			let payload = { id: null, question: question, answer: answer };
+			let payload = { id: 0, question: question, answer: answer };
 			console.log(payload);
 			try {
 				let response = await axios.post(
@@ -489,7 +505,7 @@ export default {
 		}
 
 		function submitRenaming() {
-			console.log("inside submitNewName");
+			console.log("inside submitRenaming");
 			formCheck.value.validate((valid) => {
 				if (valid) {
 					getRenamedCard().then(() => {
@@ -498,6 +514,7 @@ export default {
 				}
 			});
 		}
+
 		onBeforeMount(() => {
 			store.dispatch("topic/setTopic", {
 				id: route.params.id,
@@ -541,44 +558,63 @@ $icon-color: #1d2231;
 $icon-hover: pointer;
 $icon-opacity: 0.7;
 $icon-size: 1.5rem;
+
 .el-main {
 	padding: 0;
 	-webkit-box-shadow: 4px 5px 15px 5px rgba(0, 0, 0, 0.09);
 	box-shadow: 4px 5px 15px 5px rgba(0, 0, 0, 0.09);
-}
-.el-menu-item {
-	font-size: unset;
-}
-.el-menu-item.is-disabled.headline {
-	float: left;
-	font-size: 22px;
-	font-weight: bold;
-	cursor: context-menu;
-	opacity: 1;
-}
-.el-menu-item.add-indexcard {
-	float: right;
-	top: 50%;
-	.fa-plus-square {
-		color: $icon-color;
-		&:hover {
-			opacity: $icon-opacity;
+	background-color: #fff;
+
+	.empty-cards-text {
+		text-align: center;
+	}
+
+	.el-menu-item {
+		font-size: unset;
+	}
+
+	.el-menu-item.is-disabled.headline {
+		float: left;
+		font-size: 22px;
+		font-weight: bold;
+		cursor: context-menu;
+		opacity: 1;
+	}
+
+	.el-menu-item.add-indexcard {
+		float: right;
+		top: 50%;
+		.fa-plus-square {
+			color: $icon-color;
+			&:hover {
+				opacity: $icon-opacity;
+			}
+		}
+	}
+
+	.el-menu-item.go-back {
+		float: right;
+		top: 50%;
+
+		.el-button--default.go-back-button.item {
+			background-color: #1d2231;
+			color: #dfdfdf;
+			font-size: 18px;
+
+			&:hover {
+				opacity: $icon-opacity;
+			}
+		}
+
+		.fa-caret-square-left {
+			color: $icon-color;
+			&:hover {
+				opacity: $icon-opacity;
+			}
 		}
 	}
 }
-.el-menu-item.go-back {
-	float: right;
-	top: 50%;
-	.fa-caret-square-left {
-		color: $icon-color;
-		&:hover {
-			opacity: $icon-opacity;
-		}
-	}
-}
-.el-table {
-	font-size: unset;
-}
+
 .el-icon-star-off,
 .el-icon-star-on,
 .fa-pen,
@@ -590,83 +626,71 @@ $icon-size: 1.5rem;
 		cursor: $icon-hover;
 	}
 }
-.header-answer-question {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	font-size: 18px;
-	font-weight: bold;
-}
-.position-box-card {
-	display: flex;
-	justify-content: center;
-}
-.card-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	font-size: 18px;
-	font-weight: bold;
-}
-.el-card__body {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-.card-footer {
-	display: flex;
-	justify-content: flex-end;
-	.favorite-icon {
-		padding-right: 10px;
-	}
-}
-.text {
-	font-size: 16px;
-}
-.text-question-answer {
-	word-break: normal;
-}
-.box-card {
-	width: 480px;
-}
-.pre-formatted {
-	white-space: pre-wrap;
-}
-.button-arrange {
-	display: flex;
-	justify-content: space-between;
-}
-.go-back-button {
-	background-color: #1d2231;
-	color: #dfdfdf;
-	font-size: 18px;
-	&:hover {
-		opacity: $icon-opacity;
-	}
-}
-.el-button--default.go-back-button.item {
-	background-color: #1d2231;
-	color: #dfdfdf;
-}
 
-.el-card {
-	height: 100%;
+.form-input-button-arrange {
+	display: flex;
+	justify-content: space-between;
 }
 
 .grid-container {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
+
+	.inner-grid {
+		flex: 0 0 calc(33.33% - 20px);
+		padding: 20px;
+		margin: 10px;
+	}
 }
 
-.inner-grid {
-	flex: 0 0 calc(33.33% - 20px);
+// * {
+// 	box-sizing: border-box;
+// }
 
-	padding: 20px;
-	margin: 10px;
-}
+.box-card {
+	width: 480px;
+	height: 100%;
+	background-color: floralwhite;
+	word-break: normal;
 
-* {
-	box-sizing: border-box;
+	.card-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 18px;
+		font-weight: bold;
+	}
+
+	.header-text-answer-question {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 18px;
+		font-weight: bold;
+	}
+
+	.el-card__body {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		.text-answer {
+			height: 150px;
+
+			.pre-formatted {
+				white-space: pre-wrap;
+			}
+		}
+
+		.card-footer {
+			display: flex;
+			justify-content: flex-end;
+
+			.favorite-icon {
+				padding-right: 10px;
+			}
+		}
+	}
 }
 </style>
