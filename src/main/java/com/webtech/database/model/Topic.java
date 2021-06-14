@@ -70,6 +70,6 @@ public class Topic {
 
     @Override
     public String toString() {
-        return "TopicId=" + id + ", topicName='" + topicName;
+        return "TopicId=" + id + ", topicName=" + topicName;
     }
 }

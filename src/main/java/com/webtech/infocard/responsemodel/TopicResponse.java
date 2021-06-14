@@ -1,4 +1,4 @@
-package com.webtech.infocard;
+package com.webtech.infocard.responsemodel;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 public class TopicResponse {
 
     @NotNull(message = "TopicId is null!")
-    private long id;
+    private Long id;
 
     @NotNull(message = "TopicName is null!")
     @NotBlank(message = "Themenbezeichnung darf nicht leer sein!")
@@ -16,17 +16,17 @@ public class TopicResponse {
 
     public TopicResponse(){};
 
-    public TopicResponse(long topicId, String topicName, int indexCardCount) {
+    public TopicResponse(Long topicId, String topicName, int indexCardCount) {
         this.id = topicId;
         this.topicName = topicName;
         this.indexCardCount = indexCardCount;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
