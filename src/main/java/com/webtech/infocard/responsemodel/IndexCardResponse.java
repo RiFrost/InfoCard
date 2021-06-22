@@ -1,4 +1,4 @@
-package com.webtech.infocard;
+package com.webtech.infocard.responsemodel;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 public class IndexCardResponse {
 
     @NotNull(message = "IndexCardId is null!")
-    private long id;
+    private Long id;
 
     @NotNull(message = "Question is null!")
     @NotBlank(message = "Fragenfeld darf nicht leer sein!")
@@ -18,17 +18,17 @@ public class IndexCardResponse {
 
     public IndexCardResponse() {};
 
-    public IndexCardResponse(long topicId, String question, String answer) {
+    public IndexCardResponse(Long topicId, String question, String answer) {
         id = topicId;
         this.question = question;
         this.answer = answer;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

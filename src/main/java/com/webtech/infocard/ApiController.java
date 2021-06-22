@@ -8,6 +8,8 @@ import com.webtech.database.repository.UserRepository;
 import com.webtech.database.service.IndexCardService;
 import com.webtech.database.service.TopicService;
 import com.webtech.database.service.UserService;
+import com.webtech.infocard.responsemodel.IndexCardResponse;
+import com.webtech.infocard.responsemodel.TopicResponse;
 import com.webtech.security.jwt.JwtUtils;
 import com.webtech.security.model.JwtResponse;
 import com.webtech.security.model.LoginRequest;

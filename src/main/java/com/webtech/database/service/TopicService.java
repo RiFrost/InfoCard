@@ -5,7 +5,7 @@ import com.webtech.database.repository.GroupedTopics;
 import com.webtech.database.repository.TopicRepository;
 import com.webtech.database.repository.UserRepository;
 import com.webtech.exceptions.NotFoundException;
-import com.webtech.infocard.TopicResponse;
+import com.webtech.infocard.responsemodel.TopicResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,8 +30,7 @@ public class TopicService {
     }
 
     public TopicResponse addTopic(String userId, TopicResponse topicResponse) {
-        Topic newTopic = new Topic(userService.findById(userId), topicResponse.getTopicName());
-        topicRepo.save(newTopic);
+        Topic newTopic = topicRepo.save(new Topic(userService.findById(userId), topicResponse.getTopicName()));
         return new TopicResponse(newTopic.getId(), newTopic.getTopicName(), 0);
     }
 
@@ -43,11 +42,12 @@ public class TopicService {
     }
     
     public void deleteTopics(List<Long> topicIdList) {
-        for (Long topId : topicIdList) {
-            if (topicRepo.existsById(topId)) {
-                topicRepo.delete(findTopicById(topId));
+        topicIdList.stream()
+        .forEach(id -> {
+            if (topicRepo.existsById(id)) {
+                topicRepo.delete(findTopicById(id));
             }
-        }
+        });
     }
 
     public TopicResponse renameTopic(TopicResponse topicResponse) {

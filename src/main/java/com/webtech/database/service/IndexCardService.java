@@ -3,7 +3,8 @@ package com.webtech.database.service;
 import com.webtech.database.model.IndexCard;
 import com.webtech.database.repository.IndexCardRepository;
 import com.webtech.exceptions.NotFoundException;
-import com.webtech.infocard.IndexCardResponse;
+import com.webtech.infocard.responsemodel.IndexCardResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,25 +25,24 @@ public class IndexCardService {
     }
 
     public IndexCardResponse addIndexCard(Long topicId, IndexCardResponse indexCardResponse) {
-        IndexCard newIndexCard = new IndexCard(topicService.findTopicById(topicId), indexCardResponse.getQuestion(), indexCardResponse.getAnswer());
-        indexCardRepo.save(newIndexCard);
+        IndexCard newIndexCard = indexCardRepo.save(new IndexCard(topicService.findTopicById(topicId), indexCardResponse.getQuestion(), indexCardResponse.getQuestion()));
         return new IndexCardResponse(newIndexCard.getId(), newIndexCard.getQuestion(), newIndexCard.getAnswer());
     }
 
     public List<IndexCardResponse> getAllIndexCardsFromTopic(Long topicId) {
         List<IndexCard> indexCardList = indexCardRepo.findAllIndexCardsByTopicId(topicService.findTopicById(topicId).getId());
-        
         return indexCardList.stream()
         .map(i -> new IndexCardResponse(i.getId(), i.getQuestion(), i.getAnswer()))
         .collect(Collectors.toList());
     }
 
     public void deleteIndexCard(List<Long> indexCardIdList) {
-        for (long cardId : indexCardIdList) {
-            if (indexCardRepo.existsById(cardId)) {
-                indexCardRepo.delete(findIndexCardById(cardId));
+        indexCardIdList.stream()
+        .forEach(id -> {
+            if (indexCardRepo.existsById(id)) {
+                indexCardRepo.delete(findIndexCardById(id));
             }
-        }
+        });
     }
 
     public IndexCardResponse renameIndexCard(IndexCardResponse indexCardResponse) {
