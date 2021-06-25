@@ -40,7 +40,7 @@ public class IndexCardService {
         indexCardIdList.stream()
         .forEach(id -> {
             if (indexCardRepo.existsById(id)) {
-                indexCardRepo.delete(findIndexCardById(id));
+                indexCardRepo.deleteById(id);
             }
         });
     }

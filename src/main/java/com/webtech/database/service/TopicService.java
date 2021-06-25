@@ -45,7 +45,7 @@ public class TopicService {
         topicIdList.stream()
         .forEach(id -> {
             if (topicRepo.existsById(id)) {
-                topicRepo.delete(findTopicById(id));
+                topicRepo.deleteById(id);
             }
         });
     }
