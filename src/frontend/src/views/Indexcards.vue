@@ -1,5 +1,5 @@
 <template>
-	<el-main style="width: 80%; margin: auto;">
+	<el-main style="width: 80%; margin: auto">
 		<el-menu
 			class="el-menu-demo"
 			mode="horizontal"
@@ -10,7 +10,7 @@
 				class="add-indexcard"
 				index="3"
 				label="buttonTrigger"
-				style="border-bottom: none;"
+				style="border-bottom: none"
 			>
 				<el-tooltip
 					class="item"
@@ -29,7 +29,7 @@
 				class="go-back"
 				index="2"
 				label="backwards"
-				style="border-bottom: none;"
+				style="border-bottom: none"
 			>
 				<router-link class="router-link-indexcard" to="topics">
 					<el-tooltip
@@ -83,7 +83,7 @@
 									buttonTrigger.renameQuestion || buttonTrigger.renameAnswer
 								"
 							>
-								<fa class="test" icon="pen" style="cursor: not-allowed;"
+								<fa class="test" icon="pen" style="cursor: not-allowed"
 									>Edit</fa
 								>
 							</div>
@@ -161,7 +161,7 @@
 							class="not-clickable"
 							v-if="buttonTrigger.renameQuestion || buttonTrigger.renameAnswer"
 						>
-							<fa icon="pen" style="cursor: not-allowed;">Edit</fa>
+							<fa icon="pen" style="cursor: not-allowed">Edit</fa>
 						</div>
 					</div>
 					<div
@@ -214,7 +214,7 @@
 						</el-form>
 					</div>
 					<div class="card-footer">
-						<div class="favorite-icon" v-if="!buttonTrigger.addFavorite">
+						<div class="favorite-icon" v-if="!findFavorite(index)">
 							<el-tooltip
 								class="item"
 								effect="dark"
@@ -223,11 +223,11 @@
 							>
 								<i
 									class="el-icon-star-off"
-									@click="addToFavorites(indexCard)"
+									@click="addOrRemoveFavorites(index)"
 								></i>
 							</el-tooltip>
 						</div>
-						<div class="favorite-icon" v-if="buttonTrigger.addFavorite">
+						<div class="favorite-icon" v-if="findFavorite(index)">
 							<el-tooltip
 								class="item"
 								effect="dark"
@@ -236,7 +236,7 @@
 							>
 								<i
 									class="el-icon-star-on"
-									@click="buttonTrigger.addFavorite = false"
+									@click="addOrRemoveFavorites(index)"
 								></i>
 							</el-tooltip>
 						</div>
@@ -265,7 +265,7 @@
 			width="40%"
 			:show-close="false"
 			:close-on-click-modal="false"
-			style="font-weight: bold;"
+			style="font-weight: bold"
 		>
 			<el-form
 				:model="formNewCard"
@@ -327,6 +327,7 @@ export default {
 		const user = store.state.user.user;
 		const topic = store.state.topic.topic;
 		const indexCards = ref([]);
+		const favoriteCards = ref([]);
 		const card = ref({
 			index: {},
 			indexCard: {
@@ -407,12 +408,6 @@ export default {
 			}
 		}
 
-		// für spätere Funktion
-		function addToFavorites(indexCard) {
-			card.value.indexCard = indexCard;
-			buttonTrigger.value.addFavorite = true;
-		}
-
 		function resetForm() {
 			formCheck.value.resetFields();
 			buttonTrigger.value.newCard = false;
@@ -420,8 +415,20 @@ export default {
 			buttonTrigger.value.renameAnswer = false;
 		}
 
-		function removeObjOfArray(index) {
-			indexCards.value.splice(index, 1);
+		function removeObjOfArray(array, index) {
+			array.value.splice(index, 1);
+		}
+
+		function addOrRemoveFavorites(index) {
+			if (findFavorite(index)) {
+				removeObjOfArray(favoriteCards, index);
+			} else {
+				favoriteCards.value.push(indexCards.value[index]);
+			}
+		}
+
+		function findFavorite(index) {
+			return favoriteCards.value.includes(indexCards.value[index]);
 		}
 
 		function renameCard() {
@@ -470,7 +477,7 @@ export default {
 				console.log(response.data.ok);
 				if (response.status.valueOf(200)) {
 					console.log(response.data);
-					removeObjOfArray(index);
+					removeObjOfArray(indexCards, index);
 					console.log("index card is deleted");
 				}
 			} catch (e) {
@@ -533,6 +540,7 @@ export default {
 
 		return {
 			indexCards,
+			favoriteCards,
 			openDialog,
 			buttonTrigger,
 			submitDelete,
@@ -545,7 +553,8 @@ export default {
 			rulesRenameQuestion,
 			rulesRenameAnswer,
 			resetForm,
-			addToFavorites,
+			addOrRemoveFavorites,
+			findFavorite,
 			topic,
 			card
 		};
@@ -638,7 +647,7 @@ $icon-size: 1.5rem;
 	justify-content: center;
 
 	.inner-grid {
-		flex: 0 0 calc(33.33% - 20px);
+		flex: 0 0 calc(30% - 20px);
 		padding: 20px;
 		margin: 10px;
 	}
