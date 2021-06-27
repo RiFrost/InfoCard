@@ -8,7 +8,7 @@
 		>
 			<el-menu-item
 				class="folder"
-				index="3"
+				index="2"
 				label="buttonTrigger"
 				style="border-bottom: none"
 			>
@@ -21,7 +21,25 @@
 					<fa @click="buttonTrigger.add = true" icon="folder-plus" size="3x" />
 				</el-tooltip>
 			</el-menu-item>
-			<el-menu-item class="headline" index="2" label="Topics" disabled>
+			<el-menu-item
+				class="folder"
+				index="3"
+				label="buttonTrigger"
+				style="border-bottom: none"
+			>
+				<router-link class="router-link-indexcard" to="favorites">
+					<el-tooltip
+						class="item"
+						effect="dark"
+						content="zu den Favoriten"
+						placement="bottom"
+					>
+						<i class="el-icon-s-management"></i>
+					</el-tooltip>
+				</router-link>
+			</el-menu-item>
+
+			<el-menu-item class="headline" index="1" label="Topics" disabled>
 				Deine Übersicht
 			</el-menu-item>
 		</el-menu>
@@ -239,9 +257,9 @@ export default {
 			topics.value.splice(index, 1);
 		}
 
-		function renameTopic() {
-			topics.value[dialog.index].topicName = form.topicName;
-		}
+		// function renameTopic() {
+		// 	topics.value[dialog.index].topicName = form.topicName;
+		// }
 
 		function openDialog(index, row) {
 			dialog.index = index;
@@ -252,52 +270,52 @@ export default {
 
 		async function loadTopics() {
 			console.log("load topics");
-			console.log(user);
-			try {
-				let response = await axios.get(`${API}/topics/${user.id}`, config);
-				console.log("topics loaded");
-				topics.value = response.data;
-				console.log(topics.value);
-			} catch (e) {
-				console.error(e);
-			}
+			axios
+				.get(`${API}/topics/${user.id}`, config)
+				.then((response) => {
+					if (response.status.valueOf(200)) {
+						console.log("topics loaded");
+						topics.value = response.data;
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 
 		async function submitDelete(index, row) {
 			console.log("deletes topic");
 			let payload = [row.id];
-			console.log(payload);
-			try {
-				let response = await axios.post(`${API}/topics`, payload, config);
-				if (response.status === 200) {
-					removeTopic(index);
-					console.log("topic is deleted");
-				}
-			} catch (e) {
-				console.error(e);
-			}
+			axios
+				.post(`${API}/topics`, payload, config)
+				.then((response) => {
+					if (response.status.valueOf(200)) {
+						removeTopic(index);
+						console.log("topic is deleted");
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 
 		async function addTopic(topicName) {
 			let payload = { id: 0, topicName: topicName };
-			console.log(payload);
-			try {
-				let response = await axios.post(
-					`${API}/topics/${user.id}`,
-					payload,
-					config
-				);
-				console.log(response.data);
-				topics.value.push(response.data);
-				console.log("Topic was added");
-			} catch (e) {
-				console.error(e);
-			}
+			axios
+				.post(`${API}/topics/${user.id}`, payload, config)
+				.then((response) => {
+					if (response.status.valueOf(200)) {
+						topics.value.push(response.data);
+						console.log("Topic was added");
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 
 		function submitAdding() {
 			console.log("inside submit");
-			console.log(form.topicName);
 			formCheck.value.validate((valid) => {
 				if (valid) {
 					addTopic(form.topicName);
@@ -307,18 +325,18 @@ export default {
 		}
 
 		async function getRenamedTopic() {
-			console.log(form.topicName);
 			let payload = { id: dialog.row.id, topicName: form.topicName };
-			console.log(payload);
-			try {
-				let response = await axios.put(`${API}/topics`, payload, config);
-				if (response.status === 200) {
-					renameTopic();
-					console.log("Topicname has changed");
-				}
-			} catch (e) {
-				console.error(e);
-			}
+			axios
+				.put(`${API}/topics`, payload, config)
+				.then((response) => {
+					if (response.status.valueOf(200)) {
+						topics.value[dialog.index].topicName = response.data.topicName;
+						console.log("Topicname has changed");
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 
 		function submitRenaming() {
@@ -392,6 +410,16 @@ $icon-size: 1.5rem;
 	font-weight: bold;
 	cursor: context-menu;
 	opacity: 1;
+}
+
+.el-icon-s-management:before,
+.el-icon-s-management {
+	color: $icon-color;
+	font-size: xxx-large;
+
+	&:hover {
+		opacity: $icon-opacity;
+	}
 }
 
 .el-menu-item.folder {
