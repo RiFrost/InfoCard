@@ -2,12 +2,14 @@ package com.webtech.database.service;
 
 import com.webtech.database.model.IndexCard;
 import com.webtech.database.repository.IndexCardRepository;
+import com.webtech.database.repository.UserRepository;
 import com.webtech.exceptions.NotFoundException;
 import com.webtech.infocard.responsemodel.IndexCardResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,41 +17,59 @@ import java.util.stream.Collectors;
 public class IndexCardService {
 
     @Autowired
-    IndexCardRepository indexCardRepo;
+    private IndexCardRepository cardRepo;
 
     @Autowired
-    TopicService topicService;
+    private TopicService topicService;
 
-    public IndexCard findIndexCardById(Long indexCardId) {
-        return indexCardRepo.findById(indexCardId).orElseThrow(() -> new NotFoundException("IndexCardId " + indexCardId + " does not exist!"));
+    @Autowired
+    private UserRepository userRepo;
+
+    private IndexCard findCardById(Long indexCardId) {
+        return cardRepo.findById(indexCardId).orElseThrow(() -> new NotFoundException("IndexCardId " + indexCardId + " does not exist!"));
     }
 
-    public IndexCardResponse addIndexCard(Long topicId, IndexCardResponse indexCardResponse) {
-        IndexCard newIndexCard = indexCardRepo.save(new IndexCard(topicService.findTopicById(topicId), indexCardResponse.getQuestion(), indexCardResponse.getQuestion()));
-        return new IndexCardResponse(newIndexCard.getId(), newIndexCard.getQuestion(), newIndexCard.getAnswer());
+    public IndexCardResponse addCard(Long topicId, IndexCardResponse cardRes) {
+        IndexCard newCard = cardRepo.save(new IndexCard(topicService.findTopicById(topicId), cardRes.getQuestion(), cardRes.getAnswer(), cardRes.isFavored()));
+        return new IndexCardResponse(newCard.getId(), newCard.getQuestion(), newCard.getAnswer(), newCard.isFavored());
     }
 
-    public List<IndexCardResponse> getAllIndexCardsFromTopic(Long topicId) {
-        List<IndexCard> indexCardList = indexCardRepo.findAllIndexCardsByTopicId(topicService.findTopicById(topicId).getId());
+    public List<IndexCardResponse> getAllCardsByTopicId(Long topicId) {
+        List<IndexCard> indexCardList = cardRepo.findAllCardsByTopicId(topicService.findTopicById(topicId).getId());
         return indexCardList.stream()
-        .map(i -> new IndexCardResponse(i.getId(), i.getQuestion(), i.getAnswer()))
+        .map(i -> new IndexCardResponse(i.getId(), i.getQuestion(), i.getAnswer(), i.isFavored()))
         .collect(Collectors.toList());
     }
 
-    public void deleteIndexCard(List<Long> indexCardIdList) {
-        indexCardIdList.stream()
+    public void deleteCard(List<Long> cardIdList) {
+        cardIdList.stream()
         .forEach(id -> {
-            if (indexCardRepo.existsById(id)) {
-                indexCardRepo.delete(findIndexCardById(id));
+            if (cardRepo.existsById(id)) {
+                cardRepo.deleteById(id);
             }
         });
     }
 
-    public IndexCardResponse renameIndexCard(IndexCardResponse indexCardResponse) {
-        IndexCard indexCard = findIndexCardById(indexCardResponse.getId());
-        indexCard.setQuestion(indexCardResponse.getQuestion());
-        indexCard.setAnswer(indexCardResponse.getAnswer());
-        indexCardRepo.save(indexCard);
-        return indexCardResponse;
+    public IndexCardResponse updateCard(IndexCardResponse cardRes) {
+        IndexCard card = findCardById(cardRes.getId());
+        if(!card.getQuestion().equals(cardRes.getQuestion())) {
+            card.setQuestion(cardRes.getQuestion());
+        } else if(!card.getAnswer().equals(cardRes.getAnswer())) {
+            card.setAnswer(cardRes.getAnswer());
+        } else {
+            card.setIsFavored(cardRes.isFavored());
+        }
+        cardRepo.save(card);
+        return cardRes;
+    }
+
+    public List<IndexCardResponse> findAllFavorites(String userId) {
+        if (userRepo.existsById(userId)) {
+            List<IndexCard> cardsList = cardRepo.findFavoriteCards(userId);
+            return cardsList.stream()
+        .map(i -> new IndexCardResponse(i.getId(), i.getQuestion(), i.getAnswer(), i.isFavored()))
+        .collect(Collectors.toList());
+        }
+       return new ArrayList<IndexCardResponse>();
     }
 }

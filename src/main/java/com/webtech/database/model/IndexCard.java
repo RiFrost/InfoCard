@@ -28,13 +28,17 @@ public class IndexCard {
     @NotBlank(message = "answer can't be blank")
     private String answer;
 
+    @Column(name = "is_favored", nullable = false, columnDefinition = "boolean default false")
+    private Boolean isFavored;
+
     public IndexCard() {
     }
 
-    public IndexCard(Topic topic, String question, String answer) {
+    public IndexCard(Topic topic, String question, String answer, Boolean isFavored) {
         this.topic = topic;
         this.question = question;
         this.answer = answer;
+        this.isFavored = isFavored;
     }
 
     public Long getId() {
@@ -68,6 +72,17 @@ public class IndexCard {
     public void setAnswer(String answer) {
         this.answer = answer;
     }
+
+
+    public Boolean isFavored() {
+        return this.isFavored;
+    }
+
+
+    public void setIsFavored(Boolean isFavored) {
+        this.isFavored = isFavored;
+    }
+
 
     @Override
     public String toString() {

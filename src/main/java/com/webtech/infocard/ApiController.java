@@ -45,7 +45,7 @@ public class ApiController {
     private UserService userService;
 
     @Autowired
-    private IndexCardService indexCardService;
+    private IndexCardService cardService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -142,8 +142,8 @@ public class ApiController {
 
     @PostMapping("/topics/{userId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<TopicResponse> addNewTopic(@Valid @RequestBody TopicResponse topicResponse, @PathVariable(name = "userId") String userId) {
-        return ResponseEntity.ok(topicService.addTopic(userId, topicResponse));
+    public ResponseEntity<TopicResponse> addNewTopic(@Valid @RequestBody TopicResponse topicRes, @PathVariable(name = "userId") String userId) {
+        return ResponseEntity.ok(topicService.addTopic(userId, topicRes));
     }
 
     @GetMapping("/topics/{userId}")
@@ -162,33 +162,39 @@ public class ApiController {
 
     @PutMapping("/topics")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<TopicResponse> updateTopicName(@Valid @RequestBody() TopicResponse topicResponse) {
-        return ResponseEntity.ok(topicService.renameTopic(topicResponse));
+    public ResponseEntity<TopicResponse> updateTopicName(@Valid @RequestBody() TopicResponse topicRes) {
+        return ResponseEntity.ok(topicService.renameTopic(topicRes));
     }
 
     @PostMapping("/indexcards/{topicId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<IndexCardResponse> addNewIndexCard(@Valid @RequestBody() IndexCardResponse indexCardResponse, @PathVariable(name = "topicId") Long topicId) {
-        return ResponseEntity.ok(indexCardService.addIndexCard(topicId, indexCardResponse));
+    public ResponseEntity<IndexCardResponse> addNewCard(@Valid @RequestBody() IndexCardResponse cardRes, @PathVariable(name = "topicId") Long topicId) {
+        return ResponseEntity.ok(cardService.addCard(topicId, cardRes));
     }
 
     @GetMapping("/indexcards/{topicId}")
     @PreAuthorize("hasRole('USER')")
-    public List<IndexCardResponse> getIndexCardListFromTopic(@Valid @PathVariable(name = "topicId") Long topicId) {
-        return indexCardService.getAllIndexCardsFromTopic(topicId);
+    public List<IndexCardResponse> getCardsFromTopic(@Valid @PathVariable(name = "topicId") Long topicId) {
+        return cardService.getAllCardsByTopicId(topicId);
     }
 
     @PostMapping("/indexcards")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> deleteSelectedIndexCards(@Valid @RequestBody() List<Long> indexCardIdList) {
-        indexCardService.deleteIndexCard(indexCardIdList);
+    public ResponseEntity<Void> deleteSelectedCards(@Valid @RequestBody() List<Long> cardIdList) {
+        cardService.deleteCard(cardIdList);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/indexcards")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<IndexCardResponse> updateIndexCard(@Valid @RequestBody() IndexCardResponse indexCardResponse) {
-        return ResponseEntity.ok(indexCardService.renameIndexCard(indexCardResponse));
+    public ResponseEntity<IndexCardResponse> updateCard(@Valid @RequestBody() IndexCardResponse cardRes) {
+        return ResponseEntity.ok(cardService.updateCard(cardRes));
+    }
+
+    @GetMapping("/favorites/{userId}")
+    @PreAuthorize("hasRole('USER')")
+    public List<IndexCardResponse> getFavoriteCards(@Valid @PathVariable(name = "userId") String userId) {
+        return cardService.findAllFavorites(userId);
     }
 
     @GetMapping("/showUsers")
