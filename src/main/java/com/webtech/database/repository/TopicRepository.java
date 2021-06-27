@@ -1,6 +1,5 @@
 package com.webtech.database.repository;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 import com.webtech.database.model.Topic;
