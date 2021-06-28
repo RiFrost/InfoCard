@@ -50,14 +50,14 @@ const routes = [
       requieresLogin: true
     }
   },
-	{
-		path: "/profile",
-		name: "Profile",
-		component: Profile,
-		meta: {
-			requieresLogin: true
-		}
-	}
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+    meta: {
+      requieresLogin: true
+    }
+  },
   {
     path: "/about",
     name: "About",
