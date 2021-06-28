@@ -11,7 +11,7 @@ describe("App Comp Tests", () => {
       plugins: [store, router]
     }
   });
-
+  
   it("is instantiated", () => {
     expect(component.vm).toBeTruthy();
   });
