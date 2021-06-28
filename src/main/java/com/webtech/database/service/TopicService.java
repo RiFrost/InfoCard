@@ -20,10 +20,7 @@ public class TopicService {
     private UserService userService;
 
     @Autowired
-    TopicRepository topicRepo;
-
-    @Autowired
-    UserRepository userRepo;
+    private TopicRepository topicRepo;
 
     public Topic findTopicById(Long topicId) {
         return topicRepo.findById(topicId).orElseThrow(() -> new NotFoundException("TopicId " + topicId + " does not exist!"));
@@ -45,7 +42,7 @@ public class TopicService {
         topicIdList.stream()
         .forEach(id -> {
             if (topicRepo.existsById(id)) {
-                topicRepo.delete(findTopicById(id));
+                topicRepo.deleteById(id);
             }
         });
     }

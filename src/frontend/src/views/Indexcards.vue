@@ -1,5 +1,5 @@
 <template>
-	<el-main style="width: 80%; margin: auto;">
+	<el-main style="width: 80%; margin: auto">
 		<el-menu
 			class="el-menu-demo"
 			mode="horizontal"
@@ -10,7 +10,7 @@
 				class="add-indexcard"
 				index="3"
 				label="buttonTrigger"
-				style="border-bottom: none;"
+				style="border-bottom: none"
 			>
 				<el-tooltip
 					class="item"
@@ -29,7 +29,7 @@
 				class="go-back"
 				index="2"
 				label="backwards"
-				style="border-bottom: none;"
+				style="border-bottom: none"
 			>
 				<router-link class="router-link-indexcard" to="topics">
 					<el-tooltip
@@ -83,7 +83,7 @@
 									buttonTrigger.renameQuestion || buttonTrigger.renameAnswer
 								"
 							>
-								<fa class="test" icon="pen" style="cursor: not-allowed;"
+								<fa class="test" icon="pen" style="cursor: not-allowed"
 									>Edit</fa
 								>
 							</div>
@@ -161,7 +161,7 @@
 							class="not-clickable"
 							v-if="buttonTrigger.renameQuestion || buttonTrigger.renameAnswer"
 						>
-							<fa icon="pen" style="cursor: not-allowed;">Edit</fa>
+							<fa icon="pen" style="cursor: not-allowed">Edit</fa>
 						</div>
 					</div>
 					<div
@@ -214,7 +214,7 @@
 						</el-form>
 					</div>
 					<div class="card-footer">
-						<div class="favorite-icon" v-if="!buttonTrigger.addFavorite">
+						<div class="favorite-icon" v-if="!indexCard.favored">
 							<el-tooltip
 								class="item"
 								effect="dark"
@@ -223,11 +223,11 @@
 							>
 								<i
 									class="el-icon-star-off"
-									@click="addToFavorites(indexCard)"
+									@click="addOrRemoveFavoriteCard(index)"
 								></i>
 							</el-tooltip>
 						</div>
-						<div class="favorite-icon" v-if="buttonTrigger.addFavorite">
+						<div class="favorite-icon" v-if="indexCard.favored">
 							<el-tooltip
 								class="item"
 								effect="dark"
@@ -236,7 +236,7 @@
 							>
 								<i
 									class="el-icon-star-on"
-									@click="buttonTrigger.addFavorite = false"
+									@click="addOrRemoveFavoriteCard(index)"
 								></i>
 							</el-tooltip>
 						</div>
@@ -265,7 +265,7 @@
 			width="40%"
 			:show-close="false"
 			:close-on-click-modal="false"
-			style="font-weight: bold;"
+			style="font-weight: bold"
 		>
 			<el-form
 				:model="formNewCard"
@@ -332,7 +332,8 @@ export default {
 			indexCard: {
 				id: 0,
 				question: "",
-				answer: ""
+				answer: "",
+				favored: false
 			}
 		});
 
@@ -407,12 +408,6 @@ export default {
 			}
 		}
 
-		// für spätere Funktion
-		function addToFavorites(indexCard) {
-			card.value.indexCard = indexCard;
-			buttonTrigger.value.addFavorite = true;
-		}
-
 		function resetForm() {
 			formCheck.value.resetFields();
 			buttonTrigger.value.newCard = false;
@@ -420,33 +415,28 @@ export default {
 			buttonTrigger.value.renameAnswer = false;
 		}
 
-		function removeObjOfArray(index) {
-			indexCards.value.splice(index, 1);
-		}
-
-		function renameCard() {
-			if (formRenameCard.answer === "") {
-				indexCards.value[card.value.index].question = formRenameCard.question;
-			} else {
-				indexCards.value[card.value.index].answer = formRenameCard.answer;
-			}
+		function removeObjOfArray(array, index) {
+			array.value.splice(index, 1);
 		}
 
 		async function addNewIndexCard(question, answer) {
-			let payload = { id: 0, question: question, answer: answer };
-			console.log(payload);
-			try {
-				let response = await axios.post(
-					`${API}/indexcards/${topic.id}`,
-					payload,
-					config
-				);
-				console.log(response.data);
-				indexCards.value.push(response.data);
-				console.log("index card was added");
-			} catch (e) {
-				console.error(e);
-			}
+			let payload = {
+				id: 0,
+				question: question,
+				answer: answer,
+				isFavored: false
+			};
+			axios
+				.post(`${API}/indexcards/${topic.id}`, payload, config)
+				.then((response) => {
+					if (response.status.valueOf(200)) {
+						indexCards.value.push(response.data);
+						console.log("index card was added");
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 
 		function submitAdding() {
@@ -462,28 +452,42 @@ export default {
 		}
 
 		async function submitDelete(index) {
-			console.log("inside submitDelete");
 			let payload = [indexCards.value[index].id];
 			console.log(payload);
-			try {
-				let response = await axios.post(`${API}/indexcards`, payload, config);
-				console.log(response.data.ok);
-				if (response.status.valueOf(200)) {
-					console.log(response.data);
-					removeObjOfArray(index);
-					console.log("index card is deleted");
-				}
-			} catch (e) {
-				console.error(e);
-			}
+			axios
+				.post(`${API}/indexcards`, payload, config)
+				.then((response) => {
+					if (response.status.valueOf(200)) {
+						removeObjOfArray(indexCards, index);
+						console.log("index card is deleted");
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 			buttonTrigger.value.deleteCard = false;
+		}
+
+		async function addOrRemoveFavoriteCard(index) {
+			let payload = {
+				id: indexCards.value[index].id,
+				question: indexCards.value[index].question,
+				answer: indexCards.value[index].answer,
+				isFavored: (indexCards.value[index].favored = !indexCards.value[index]
+					.favored)
+			};
+			axios.put(`${API}/indexcards`, payload, config).catch((err) => {
+				indexCards.value[index].favored = !indexCards.value[index].favored;
+				console.log(err);
+			});
 		}
 
 		async function getRenamedCard() {
 			let payload = {
 				id: card.value.indexCard.id,
 				question: "",
-				answer: ""
+				answer: "",
+				isFavored: card.value.indexCard.favored
 			};
 			if (formRenameCard.question === "") {
 				payload.question = card.value.indexCard.question;
@@ -492,16 +496,19 @@ export default {
 				payload.question = formRenameCard.question;
 				payload.answer = card.value.indexCard.answer;
 			}
-			console.log(payload);
-			try {
-				let response = await axios.put(`${API}/indexcards`, payload, config);
-				if (response.status.valueOf(200)) {
-					renameCard();
-					console.log("index card name has changed");
-				}
-			} catch (e) {
-				console.error(e);
-			}
+			axios
+				.put(`${API}/indexcards`, payload, config)
+				.then((response) => {
+					if (response.status.valueOf(200)) {
+						indexCards.value[card.value.index].question =
+							response.data.question;
+						indexCards.value[card.value.index].answer = response.data.answer;
+						console.log("index card name has changed");
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 
 		function submitRenaming() {
@@ -545,7 +552,7 @@ export default {
 			rulesRenameQuestion,
 			rulesRenameAnswer,
 			resetForm,
-			addToFavorites,
+			addOrRemoveFavoriteCard,
 			topic,
 			card
 		};
@@ -638,7 +645,7 @@ $icon-size: 1.5rem;
 	justify-content: center;
 
 	.inner-grid {
-		flex: 0 0 calc(33.33% - 20px);
+		flex: 0 0 calc(30% - 20px);
 		padding: 20px;
 		margin: 10px;
 	}

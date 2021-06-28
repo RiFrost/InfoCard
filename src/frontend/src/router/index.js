@@ -5,6 +5,7 @@ import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Topics from "@/views/Topics.vue";
 import Indexcards from "@/views/Indexcards.vue";
+import Favorites from "@/views/Favorites.vue";
 import About from "@/views/About.vue";
 import Contact from "@/views/Contact.vue";
 import Profile from "@/views/Profile.vue";
@@ -42,6 +43,14 @@ const routes = [
     }
   },
   {
+    path: "/favorites",
+    name: "Favorites",
+    component: Favorites,
+    meta: {
+      requieresLogin: true
+    }
+  },
+  {
     path: "/about",
     name: "About",
     component: About
@@ -50,14 +59,6 @@ const routes = [
     path: "/contact",
     name: "Contact",
     component: Contact
-  },
-  {
-    path: "/profile",
-    name: "Profile",
-    component: Profile,
-    meta: {
-      requieresLogin: true
-    }
   }
 ];
 

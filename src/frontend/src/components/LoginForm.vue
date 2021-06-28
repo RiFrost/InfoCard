@@ -1,22 +1,28 @@
 <template>
   <div class="main">
+    <div class="main-header"></div>
     <div class="main-content">
       <el-form
         :model="form"
         ref="formEl"
         :rules="rules"
         :status-icon="true"
-        label-width="120px"
+        label-width="90px"
         @keyup.enter="submitForm()"
       >
         <img src="../assets/logo.png" />
-        <el-form-item label="E-Mail" prop="email">
-          <el-input v-model="form.email"></el-input>
+        <h2>Login</h2>
+        <el-form-item label="E-Mail" prop="email" label-width="auto">
+          <el-input v-model="form.email" style="width: 200px"></el-input>
         </el-form-item>
-        <el-form-item label="Password" prop="password">
-          <el-input v-model="form.password" show-password></el-input>
+        <el-form-item label="Password" prop="password" label-width="auto">
+          <el-input
+            v-model="form.password"
+            show-password
+            style="width: 200px"
+          ></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label-width="auto">
           <el-button type="primary" @click="submitForm()">Login</el-button>
         </el-form-item>
       </el-form>
@@ -90,13 +96,14 @@ export default {
       img {
         height: 200px;
         width: 250px;
-        margin: 35px 0 50px 0;
+        margin: 25px 0 25px 0;
       }
 
       h2 {
         text-transform: uppercase;
         margin: 0 30px 30px 30px;
         font-weight: bold;
+        color: #1d2231;
       }
 
       .card {
@@ -147,6 +154,16 @@ export default {
             width: 75px;
             cursor: pointer;
           }
+        }
+      }
+
+      .el-button--primary {
+        background-color: #1d2231;
+        border-color: #1d2231;
+        color: #dfdfdf;
+
+        &:hover {
+          opacity: 0.7;
         }
       }
     }

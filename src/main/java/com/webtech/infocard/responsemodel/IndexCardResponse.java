@@ -9,19 +9,22 @@ public class IndexCardResponse {
     private Long id;
 
     @NotNull(message = "Question is null!")
-    @NotBlank(message = "Fragenfeld darf nicht leer sein!")
+    @NotBlank(message = "Question must not be empty!")
     private String question;
 
     @NotNull(message = "Answer is null!")
-    @NotBlank(message = "Antwortfeld darf nicht leer sein!")
+    @NotBlank(message = "Answer must not be empty!")
     private String answer;
+
+    private Boolean isFavored;
 
     public IndexCardResponse() {};
 
-    public IndexCardResponse(Long topicId, String question, String answer) {
-        id = topicId;
+    public IndexCardResponse(Long topicId, String question, String answer, Boolean isFavored) {
+        this.id = topicId;
         this.question = question;
         this.answer = answer;
+        this.isFavored = isFavored;
     }
 
     public Long getId() {
@@ -47,5 +50,15 @@ public class IndexCardResponse {
     public void setAnswer(String answer) {
         this.answer = answer;
     }
+
+    public Boolean isFavored() {
+        return this.isFavored;
+    }
+
+
+    public void setIsFavored(Boolean isFavored) {
+        this.isFavored = isFavored;
+    }
+
 }
 

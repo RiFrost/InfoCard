@@ -12,7 +12,7 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    UserRepository userRepo;
+    private UserRepository userRepo;
 
     public User findById(String userId) {
         return userRepo.findById(userId).orElseThrow(() -> new NotFoundException("UserId " + userId + " not found!"));

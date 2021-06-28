@@ -23,18 +23,19 @@
       </el-menu>
     </div>
     <div class="user-items">
-      <div class="logged-out" v-if="!isAuthenticated">
+      <div v-if="!isAuthenticated">
         <el-button @click="pushRoute('login')" round>Login</el-button>
         <el-button @click="pushRoute('register')" type="success" round
           >Register</el-button
         >
       </div>
-      <div class="logged-in" v-if="isAuthenticated">
+      <div v-if="isAuthenticated">
         <el-dropdown trigger="click">
-          <span class="user-name"
-            >{{ user.firstname }} {{ user.lastname
-            }}<el-avatar class="user-icon" icon="el-icon-user-solid"></el-avatar
-          ></span>
+          <el-avatar
+            class="user-icon"
+            icon="el-icon-user-solid"
+            :size="55"
+          ></el-avatar>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item
@@ -66,21 +67,16 @@ export default {
   setup() {
     const router = useRouter();
     const isAuthenticated = ref();
-    const user = ref(store.state.user.user);
 
     onUpdated(() => {
       isAuthenticated.value = store.getters["user/isAuthenticated"];
-      user.value = store.state.user.user;
-    });
-
-    onMounted(() => {
-      store.dispatch("user/updateUser");
     });
 
     function logout() {
       store.dispatch("user/logout");
     }
 
+    // TODO Rethink
     const activeIndex = computed(() => {
       return router.currentRoute.value.path;
     });
@@ -93,8 +89,7 @@ export default {
       activeIndex,
       pushRoute,
       isAuthenticated,
-      logout,
-      user
+      logout
     };
   }
 };
@@ -154,15 +149,8 @@ export default {
     display: flex;
     flex-direction: row-reverse;
 
-    .user-name {
-      color: rgb(223, 223, 223);
-      display: flex;
-      align-items: center;
+    .user-icon {
       cursor: pointer;
-
-      .user-icon {
-        margin: auto 0 auto 1rem;
-      }
     }
   }
 }
