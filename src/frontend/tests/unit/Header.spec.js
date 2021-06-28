@@ -30,10 +30,6 @@ describe("Header Comp Tests", () => {
     expect(component.vm).toBeTruthy();
   });
 
-  it("changes after logged in", () => {
-    expect(component.find(".logged-out").exists()).toBe(true);
-  });
-
   /**it("is logged in", async () => {
     const mocked_comp = shallowMount(Header, {
       data() {
