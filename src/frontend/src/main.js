@@ -12,7 +12,10 @@ import {
   faPen,
   faTrashAlt,
   faPlusSquare,
-  faCaretSquareLeft
+  faCaretSquareLeft,
+  faUser,
+  faMedal,
+  faTrophy
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faFacebookF,
@@ -32,7 +35,10 @@ library.add(
   faInstagram,
   faTwitter,
   faGooglePlusG,
-  faLinkedinIn
+  faLinkedinIn,
+  faUser,
+  faMedal,
+  faTrophy
 );
 
 createApp(App)

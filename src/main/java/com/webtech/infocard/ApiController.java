@@ -15,6 +15,7 @@ import com.webtech.security.model.JwtResponse;
 import com.webtech.security.model.LoginRequest;
 import com.webtech.security.model.MessageResponse;
 import com.webtech.security.model.RegisterRequest;
+import com.webtech.security.model.UserResponse;
 import com.webtech.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -138,6 +139,13 @@ public class ApiController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @GetMapping("/getUser/{userId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserResponse> getUser(@Valid @PathVariable(name = "userId") String userId) {
+        User user = userRepository.getOne(userId);
+        return ResponseEntity.ok(new UserResponse(user.getFirstname(), user.getLastname(), user.getEmail()));
     }
 
     @PostMapping("/topics/{userId}")

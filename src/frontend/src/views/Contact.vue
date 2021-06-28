@@ -239,14 +239,18 @@
 
 <script>
 import { reactive } from "vue";
+import { useStore } from "vuex";
 export default {
   name: "Contact",
 
   setup() {
+    const store = useStore();
+    const user = store.state.user.user;
+
     const contactForm = reactive({
-      firstname: "",
-      lastname: "",
-      email: "",
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
       subject: "",
       message: ""
     });
