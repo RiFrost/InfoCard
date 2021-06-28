@@ -19,8 +19,10 @@ jobs:
       - name: Run npm install
         run: npm --prefix ./src/frontend/ install
       - name: Run Frontend Tests
+        working-directory: ./src/frontend
         run: npm run test:unit
       - name: Change wrapper permissions
+        working-directory: ./
         run: chmod +x ./gradlew
       - name: Run Backend Tests
         run: ./gradlew test
