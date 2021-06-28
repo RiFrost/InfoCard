@@ -8,8 +8,8 @@
     <img alt="GitHub release" src="https://img.shields.io/github/v/release/RiFrost/InfoCard?color=blue">
   </a>
 
-  <a href="https://github.com/RiFrost/InfoCard/releases" target="_blank">
-    <img alt="GitHub release" src="https://img.shields.io/github/last-commit/RiFrost/InfoCard?color=lightgreen">
+  <a href="https://github.com/RiFrost/InfoCard/commits/main" target="_blank">
+    <img alt="GitHub last commits" src="https://img.shields.io/github/last-commit/RiFrost/InfoCard?color=lightgreen">
   </a>
 
   <a href="https://github.com/RiFrost/InfoCard/issues" target="_blank">
