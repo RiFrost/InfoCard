@@ -16,6 +16,8 @@
       >
     </div>
 
+    <p>{{ testVar }}</p>
+
     <el-table :data="users" style="width: 100%">
       <el-table-column prop="id" label="Id" width="400"> </el-table-column>
       <el-table-column prop="firstname" label="Firstname" width="180">
@@ -51,6 +53,8 @@ export default {
 
     const user = store.state.user.user;
 
+    const testVar = ref(1);
+
     const config = {
       headers: {
         Authorization: user.tokenType + " " + user.accessToken
@@ -76,7 +80,8 @@ export default {
     }
 
     function getUsersNoAuth() {
-      axios
+      testVar.value += 1;
+      return axios
         .get(API + "/api/showUsersNoAuth")
         .then(res => {
           openSuc();
@@ -115,7 +120,8 @@ export default {
       user,
       getUsers,
       getUsersNoAuth,
-      logout
+      logout,
+      testVar
     };
   }
 };
