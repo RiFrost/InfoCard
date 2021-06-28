@@ -1,4 +1,4 @@
-# InfoCard
+# <a href="https://infocard.herokuapp.com">InfoCard</a>
 
 <p align="center">
   <img src="./src/frontend/src/assets/logo.png" alt="drawing" width="600" />
@@ -28,12 +28,13 @@
 </p>
 
 
-<p>Hast du Schwierigkeiten dir Fakten dauerhaft zu merken? Dann bietet dir <strong><em>InfoCard</em></strong> die ultimative L&ouml;sung f&uuml;r dein Ged&auml;chtnisproblem!</p>
+<p>Hast du Schwierigkeiten dir Fakten dauerhaft zu merken? Dann bietet dir <a href="https://infocard.herokuapp.com"><strong><em>InfoCard</em></strong></a> die ultimative L&ouml;sung f&uuml;r dein Ged&auml;chtnisproblem!</p>
 <p>Egal ob in der Schule, im Studium oder im neuem Job. Oft f&auml;llt es uns schwer die wichtigen Fakten im Ged&auml;chtnis zu behalten.</p>
 <p>Logg dich ein und los geht's! Erstelle Themengebiete zu denen du dir etwas merken m&ouml;chtest. Lege dir Karteikarten an und f&uuml;lle sie mit dem altbekannten Frage-Antwortspiel aus.</p>
-<p>Du m&ouml;chtest dein Ged&auml;chtnis pr&uuml;fen? Kein Problem, w&auml;hle die gew&uuml;nschten Karteikarten aus und teste, wie gut du bist. Im Ampelsystem bestimmst du, wie gut du warst und bei welchen Fragen noch Lernbedarf besteht.</p>
+<p>Du m&ouml;chtest dein Ged&auml;chtnis pr&uuml;fen? Kein Problem, w&auml;hle die gew&uuml;nschten Karteikarten aus und teste, wie gut du bist. Im Ampelsystem* bestimmst du, wie gut du warst und bei welchen Fragen noch Lernbedarf besteht.</p>
 <p>Mit <strong><em>InfoCard</em></strong> gibt es keine peinlichen Momente des Vergessens mehr!</p>
 
+\* work in progress
 
 # Authors
 
