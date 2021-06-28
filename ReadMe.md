@@ -2,24 +2,24 @@
 
 <p align="center">
   <img src="./src/frontend/src/assets/logo.png" alt="drawing" width="600" />
-
+  
   <br>
   <a href="https://github.com/RiFrost/InfoCard/releases" target="_blank">
-    <img alt="GitHub release" src="https://img.shields.io/badge/release-v0.1.1-blue.svg?style=plastic">
+    <img alt="GitHub release" src="https://img.shields.io/github/v/release/RiFrost/InfoCard?color=blue">
   </a>
 
   <a href="https://github.com/RiFrost/InfoCard/releases" target="_blank">
-    <img alt="GitHub release" src="https://img.shields.io/badge/last_commit-june-lightgreen.svg?style=plastic">
+    <img alt="GitHub release" src="https://img.shields.io/github/last-commit/RiFrost/InfoCard?color=lightgreen">
   </a>
 
-  <a href="https://github.com/RiFrost/InfoCard/releases" target="_blank">
-    <img alt="GitHub release" src="https://img.shields.io/badge/issues-0-darkred.svg?style=plastic">
+  <a href="https://github.com/RiFrost/InfoCard/issues" target="_blank">
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues/RiFrost/InfoCard?color=darkred">
   </a>
 
   </br>
 
-  <a href="https://github.com/RiFrost/InfoCard/releases" target="_blank">
-    <img alt="GitHub release" src="https://img.shields.io/badge/pull_requests-0-yellow.svg?style=plastic">
+  <a href="https://github.com/RiFrost/InfoCard/pulls" target="_blank">
+    <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/RiFrost/InfoCard?color=yellow">
   </a>
 
   <a href="https://github.com/RiFrost/InfoCard#contribute" target="_blank">
