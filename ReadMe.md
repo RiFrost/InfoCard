@@ -23,7 +23,7 @@
   </a>
 
   <a href="https://github.com/RiFrost/InfoCard#contribute" target="_blank">
-    <img alt="Contributors" src="https://img.shields.io/badge/all_contributors-2-orange.svg?style=plastic">
+    <img alt="Contributors" src="https://img.shields.io/badge/all_contributors-2-orange.svg">
   </a>
 </p>
 
