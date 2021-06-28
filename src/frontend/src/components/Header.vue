@@ -23,13 +23,13 @@
       </el-menu>
     </div>
     <div class="user-items">
-      <div v-if="!isAuthenticated">
+      <div class="logged-out" v-if="!isAuthenticated">
         <el-button @click="pushRoute('login')" round>Login</el-button>
         <el-button @click="pushRoute('register')" type="success" round
           >Register</el-button
         >
       </div>
-      <div v-if="isAuthenticated">
+      <div class="logged-in" v-if="isAuthenticated">
         <el-dropdown trigger="click">
           <span class="user-name"
             >{{ user.firstname }} {{ user.lastname
