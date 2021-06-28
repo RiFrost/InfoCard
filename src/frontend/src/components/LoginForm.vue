@@ -34,27 +34,22 @@
 import { reactive, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
-
 export default {
   name: "LoginForm",
   components: {},
-
   setup() {
     const store = useStore();
     const formEl = ref();
-
     const form = reactive({
       email: "",
       password: ""
     });
-
     function openErr(err) {
       ElMessage({
         message: err,
         type: "error"
       });
     }
-
     function submitForm() {
       store
         .dispatch("user/login", {
@@ -65,7 +60,6 @@ export default {
           openErr("Bad Credentials");
         });
     }
-
     return {
       form,
       formEl,
@@ -80,32 +74,27 @@ export default {
   display: flex;
   width: 100%;
   flex-direction: column;
-
   .main-content {
     display: flex;
     width: auto;
     height: 100%;
-
     form {
       display: flex;
       flex-direction: column;
       align-items: center;
       margin: auto;
       width: 300px;
-
       img {
         height: 200px;
         width: 250px;
         margin: 25px 0 25px 0;
       }
-
       h2 {
         text-transform: uppercase;
         margin: 0 30px 30px 30px;
         font-weight: bold;
         color: #1d2231;
       }
-
       .card {
         display: flex;
         flex-direction: column;
@@ -113,18 +102,15 @@ export default {
         width: 100%;
         padding: 0 0 20px 0;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-
         input {
           margin: 30px 0 0 0;
           padding: 5px;
           width: 80%;
         }
-
         .pw-link {
           text-decoration: none;
           margin-top: 0.5rem;
         }
-
         button {
           font-weight: bold;
           width: 80%;
@@ -135,20 +121,17 @@ export default {
           cursor: pointer;
           background-color: blue;
         }
-
         .router {
           display: flex;
           text-decoration: none;
           justify-content: center;
           width: 100%;
         }
-
         label {
           display: flex;
           width: 100%;
           justify-items: space-between;
           cursor: pointer;
-
           input {
             margin: 5px 0 0 0;
             width: 75px;
@@ -156,12 +139,10 @@ export default {
           }
         }
       }
-
       .el-button--primary {
         background-color: #1d2231;
         border-color: #1d2231;
         color: #dfdfdf;
-
         &:hover {
           opacity: 0.7;
         }

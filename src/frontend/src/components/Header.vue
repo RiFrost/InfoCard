@@ -1,6 +1,6 @@
 <template>
   <div class="nav">
-    <div class="brand">
+    <div class="brand" @click="pushRoute('')">
       <img src="@/assets/logo.png" />
       <div class="brand-name">
         <h1>InfoCard</h1>
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { computed, onMounted, onUpdated, ref } from "vue";
+import { computed, onUpdated, ref } from "vue";
 import { useRouter } from "vue-router";
 import store from "../store";
 export default {
@@ -108,6 +108,7 @@ export default {
     display: flex;
     flex-direction: row;
     width: 30%;
+    cursor: pointer;
 
     img {
       width: 130px;
