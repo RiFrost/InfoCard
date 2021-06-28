@@ -47,9 +47,16 @@
 										: "Antwort: " + card.answer
 								}}
 							</el-scrollbar>
-							<span v-on:click="indexCards.splice(index, 1)" class="delete-card"
-								>X</span
+							<el-tooltip
+								class="item"
+								effect="dark"
+								content="nicht mehr merken"
+								placement="bottom"
 							>
+								<span v-on:click="removeFavoriteCard(index)" class="delete-card"
+									>X</span
+								>
+							</el-tooltip>
 						</p>
 					</transition>
 				</li>
@@ -87,6 +94,26 @@ export default {
 			indexCards.value[index].flipped = !indexCards.value[index].flipped;
 		}
 
+		async function removeFavoriteCard(index) {
+			let payload = {
+				id: indexCards.value[index].id,
+				question: indexCards.value[index].question,
+				answer: indexCards.value[index].answer,
+				isFavored: false
+			};
+			axios
+				.put(`${API}/indexcards`, payload, config)
+				.then((response) => {
+					if (response.status.valueOf(200)) {
+						indexCards.value.splice(index, 1);
+					}
+				})
+				.catch((err) => {
+					indexCards.value[index].favored = !indexCards.value[index].favored;
+					console.log(err);
+				});
+		}
+
 		async function loadIndexCards() {
 			console.log("load index cards");
 			axios
@@ -111,7 +138,8 @@ export default {
 
 		return {
 			indexCards,
-			toggleCard
+			toggleCard,
+			removeFavoriteCard
 		};
 	}
 };
@@ -213,11 +241,11 @@ li:hover {
 	top: 0;
 	padding: 10px 15px;
 	opacity: 0.4;
+	color: #1d2231;
 	transition: all 0.5s ease;
 }
 
-.delete-card:hover,
-.error {
+.delete-card:hover {
 	opacity: 1;
 	transform: rotate(360deg);
 }
