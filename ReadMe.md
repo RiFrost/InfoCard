@@ -25,6 +25,16 @@
   <a href="https://github.com/RiFrost/InfoCard#contribute" target="_blank">
     <img alt="Contributors" src="https://img.shields.io/badge/all_contributors-2-orange.svg">
   </a>
+  
+  </br>
+  
+  <a href="https://lgtm.com/projects/g/RiFrost/InfoCard/alerts/" target="_blank">
+    <img alt="lgtm alerts" src="https://img.shields.io/lgtm/alerts/g/RiFrost/InfoCard.svg?logo=lgtm&logoWidth=18">
+  </a>
+  
+  <a href="https://lgtm.com/projects/g/RiFrost/InfoCard/context:javascript" target="_blank">
+    <img alt="JavaScript Grading" src="https://img.shields.io/lgtm/grade/javascript/g/RiFrost/InfoCard.svg?logo=lgtm&logoWidth=18">
+  </a>
 </p>
 
 
